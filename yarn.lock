@@ -58,6 +58,21 @@
     "@babel/helper-validator-identifier" "^7.14.9"
     to-fast-properties "^2.0.0"
 
+"@cloudflare/opaque-ts@^0.7.5":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@cloudflare/opaque-ts/-/opaque-ts-0.7.5.tgz#0518f8319cd5d0febb39fe7e59f198737dac9fa6"
+  integrity sha512-S+BlQbKknJVdiX5bQELbLBwOHNfML/vNi4Zh3b5U7F3fU8gGeS/ozUYOLRd+i5v4gQutTNa4GFKStltr+4aG7w==
+  dependencies:
+    "@cloudflare/voprf-ts" "0.8.0"
+    "@noble/hashes" "0.4.4"
+
+"@cloudflare/voprf-ts@0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/voprf-ts/-/voprf-ts-0.8.0.tgz#9f76e9ade60e35ce708388b6b755cba48674d023"
+  integrity sha512-fKKU2PHgVPyJ0xaxnKCZ2WEwNzN7QsT4M8n/iJ4oWNi2dnILGALhHhlGoRoUAXNunIxdRmbQi1xF2Vi2LaaMXQ==
+  dependencies:
+    sjcl "^1.0.8"
+
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.3.tgz#9e42981ef035beb3dd49add17acb96e8ff6f394c"
@@ -158,6 +173,11 @@
   version "12.0.8"
   resolved "https://registry.yarnpkg.com/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-12.0.8.tgz#eae6d4c94dc8aae8ba177e2de02080339d0d4563"
   integrity sha512-tTga6OFfO2JS+Yt5hdryng259c/tzNgSWkdiU2E+RBHiysAIOta57n4PJ8iPahOSqEqjaToPI76wM+o441GaNQ==
+
+"@noble/hashes@0.4.4":
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-0.4.4.tgz#1662c9ebef111fc8952dc35fffb4d04043def3f4"
+  integrity sha512-crq2J2g8nIcczVZjYjIQ73GafloqJ6sSual8I/iC8iacMyHwI/ZVskR8Jn8ZmYBq48VC4G+16d2R0SYWVARYGg==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
@@ -1851,6 +1871,11 @@ side-channel@^1.0.4:
     call-bind "^1.0.0"
     get-intrinsic "^1.0.2"
     object-inspect "^1.9.0"
+
+sjcl@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/sjcl/-/sjcl-1.0.8.tgz#f2ec8d7dc1f0f21b069b8914a41a8f236b0e252a"
+  integrity sha512-LzIjEQ0S0DpIgnxMEayM1rq9aGwGRG4OnZhCdjx7glTaJtf4zRfpg87ImfjSJjoW9vKpagd82McDOwbRT5kQKQ==
 
 slash@^3.0.0:
   version "3.0.0"

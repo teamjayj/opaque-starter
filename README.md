@@ -14,6 +14,16 @@ This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package ma
 -   `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 -   `tsconfig`: `tsconfig.json`s used throughout the monorepo
 
+-   `@jayj/pake`: password-authenticated key exchange (PAKE) API
+
+#### Drivers
+
+| Driver                           | Implementation          | IETF Draft Version                                                                                     | Crypto      |
+| -------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------ | ----------- |
+| `@jayj/opaque-cloudflare-driver` | `@cloudflare/opaque-ts` | [`draft-irtf-cfrg-opaque-07`](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-opaque-07)         | `sjcl`      |
+| `@jayj/opaque-nthparty-driver`   | `@nthparty/opaque`      | [`draft-krawczyk-cfrg-opaque-06`](https://datatracker.ietf.org/doc/html/draft-krawczyk-cfrg-opaque-06) | `libsodium` |
+| `@jayj/opaque-stef-driver`       | `libopaque`             | [`draft-irtf-cfrg-opaque-09`](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-opaque)            | `libsodium` |
+
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ### Utilities

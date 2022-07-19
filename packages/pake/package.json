@@ -1,0 +1,19 @@
+{
+    "name": "pake",
+    "version": "0.0.0",
+    "main": "./index.tsx",
+    "types": "./index.tsx",
+    "license": "MIT",
+    "scripts": {
+        "lint": "eslint ./src/*.ts*"
+    },
+    "devDependencies": {
+        "eslint": "^7.32.0",
+        "eslint-config-custom": "*",
+        "tsconfig": "*",
+        "typescript": "^4.5.2"
+    },
+    "dependencies": {
+        "@cloudflare/opaque-ts": "^0.7.5"
+    }
+}
