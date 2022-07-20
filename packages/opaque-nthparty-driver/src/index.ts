@@ -1,11 +1,11 @@
 import opaque from '@nthparty/opaque';
 import { PakeClientDriver, PakeServerDriver } from '@jayj/pake';
-import { NthPartyOpaqueProtocol } from './types';
+import { OpaqueNthPartyProtocol } from './types';
 
-export class NthPartyOpaqueDriver
+export class OpaqueNthPartyDriver
     implements PakeClientDriver, PakeServerDriver
 {
-    private protocol: NthPartyOpaqueProtocol;
+    private protocol: OpaqueNthPartyProtocol;
 
     constructor() {}
 

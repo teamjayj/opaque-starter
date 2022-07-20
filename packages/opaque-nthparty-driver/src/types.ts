@@ -24,7 +24,7 @@ export type UserRecord = {
     pepper: Pepper;
 };
 
-export interface NthPartyOpaqueProtocol {
+export interface OpaqueNthPartyProtocol {
     clientRegister(
         password: string,
         userId: string,
