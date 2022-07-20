@@ -21,7 +21,28 @@ export class OpaqueNthPartyProtocolV2 implements OpaqueNthPartyProtocol {
     async serverRegister(
         iterations?: number | undefined,
         opId?: string | undefined
-    ): Promise<UserRecord> {}
+    ): Promise<UserRecord> {
+        // from client
+        const hashedPassword = new Uint8Array();
+
+        // server computations
+        const serverOPRFKey =
+            this.sodium.crypto_core_ristretto255_scalar_random();
+
+        const passwordOPRF = this.util.iteratedHash(
+            this.util.oprfF(serverOPRFKey, hashedPassword),
+            iterations
+        );
+
+        const serverPrivateKey =
+            this.sodium.crypto_core_ristretto255_scalar_random();
+        const clientPrivateKey =
+            this.sodium.crypto_core_ristretto255_scalar_random();
+        const serverPublicKey =
+            this.sodium.crypto_scalarmult_ristretto255_base(serverPrivateKey);
+        const clientPublicKey =
+            this.sodium.crypto_scalarmult_ristretto255_base(clientPrivateKey);
+    }
 
     async clientAuthenticate(
         password: string,
