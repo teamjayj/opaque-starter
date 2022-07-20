@@ -200,6 +200,14 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@nthparty/opaque@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@nthparty/opaque/-/opaque-0.3.0.tgz#ce278494ccb815d73a54dfca099ac200ea1f9520"
+  integrity sha512-OMZPCHK3Uo0fsr0lb0GixgSu0ljI27tQM6oIcOmMbsqu1hmUBpMBmKsEyqNQWUfKnyaudjueOdfh2UDHexW5eg==
+  dependencies:
+    libsodium-wrappers-sumo "^0.7.6"
+    oprf "^2.0.0"
+
 "@rushstack/eslint-patch@^1.1.3":
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.4.tgz#0c8b74c50f29ee44f423f7416829c0bf8bb5eb27"
@@ -1391,6 +1399,18 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+libsodium-sumo@^0.7.0:
+  version "0.7.10"
+  resolved "https://registry.yarnpkg.com/libsodium-sumo/-/libsodium-sumo-0.7.10.tgz#169756dbf32088f42e30dfb0a7860074663fb0b4"
+  integrity sha512-xvYHwrTPvw9EFvX77x6gFiB7vdTv4+9xpM5DCkg9FJwysHoBO7sYXxXjy5L2gQSuWaINbtjBUry9eCg/+nYwCA==
+
+libsodium-wrappers-sumo@^0.7.6:
+  version "0.7.10"
+  resolved "https://registry.yarnpkg.com/libsodium-wrappers-sumo/-/libsodium-wrappers-sumo-0.7.10.tgz#592b0cc714ddf3954f93e2292ff3aadebd2b282b"
+  integrity sha512-1noz8Mcl/LUzO/iSO/FJzoJyIaPwxl+/+E4CoTIXtsPiEEXQx2sxalmrVWxteLpynqgX0ASo28ChB9NEVRh0Pg==
+  dependencies:
+    libsodium-sumo "^0.7.0"
+
 loader-utils@1.2.3:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-1.2.3.tgz#1ff5dc6911c9f0a062531a4c04b609406108c2c7"
@@ -1595,6 +1615,13 @@ once@^1.3.0:
   integrity sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==
   dependencies:
     wrappy "1"
+
+oprf@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/oprf/-/oprf-2.0.0.tgz#ae1b959eb97e515e8823f0cb47cdc8ef8eb8b704"
+  integrity sha512-U478RnpEsyeR7Lt8KDLQ6rFioXAvN6Ei0E6U8XzkWor6JCXu0BnvOfMre5n29Pu7oHmKRI8CipXA1IXrFWIQOw==
+  dependencies:
+    libsodium-wrappers-sumo "^0.7.6"
 
 optionator@^0.9.1:
   version "0.9.1"
