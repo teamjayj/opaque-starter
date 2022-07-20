@@ -1,5 +1,5 @@
 import OPRF from 'oprf';
-import Sodium from 'libsodium-wrappers-sumo';
+import Sodium, { CryptoBox } from 'libsodium-wrappers-sumo';
 import { IMaskedData } from 'oprf/build/oprf.slim';
 
 export class OpaqueNthPartyUtilV2 {
@@ -7,8 +7,8 @@ export class OpaqueNthPartyUtilV2 {
 
     public sodiumAeadEncrypt(
         key: Uint8Array,
-        plaintext: string
-    ): Sodium.CryptoBox {
+        plaintext: string | Uint8Array
+    ): CryptoBox {
         const rawCiphertext = this.sodium.crypto_aead_chacha20poly1305_encrypt(
             plaintext,
             null,
@@ -25,7 +25,10 @@ export class OpaqueNthPartyUtilV2 {
         };
     }
 
-    public sodiumAeadDecrypt(key: Uint8Array, cryptoBox: Sodium.CryptoBox) {
+    public sodiumAeadDecrypt(
+        key: Uint8Array,
+        cryptoBox: CryptoBox
+    ): Uint8Array {
         const isValidHash = this.sodium.crypto_auth_hmacsha512_verify(
             cryptoBox.mac,
             cryptoBox.ciphertext,
@@ -71,14 +74,14 @@ export class OpaqueNthPartyUtilV2 {
         return this.sodium.crypto_core_ristretto255_from_hash(x);
     }
 
-    public iteratedHash(x: Uint8Array, t = 1000) {
+    public iteratedHash(x: Uint8Array, t = 1000): Uint8Array {
         return this.sodium.crypto_generichash(
             x.length,
             t === 1 ? x : this.iteratedHash(x, t - 1)
         );
     }
 
-    public oprfF(k: Uint8Array, x: Uint8Array) {
+    public oprfF(k: Uint8Array, x: Uint8Array): Uint8Array {
         if (
             this.sodium.crypto_core_ristretto255_is_valid_point(x) === false ||
             this.sodium.is_zero(x)
@@ -96,7 +99,7 @@ export class OpaqueNthPartyUtilV2 {
         return unmasked;
     }
 
-    public sodiumFromByte(n: number) {
+    public sodiumFromByte(n: number): Uint8Array {
         return new Uint8Array(32).fill(n);
     }
 
