@@ -1,0 +1,117 @@
+import OPRF from 'oprf';
+import Sodium from 'libsodium-wrappers-sumo';
+import { IMaskedData } from 'oprf/build/oprf.slim';
+
+export class OpaqueNthPartyUtilV2 {
+    constructor(private sodium: typeof Sodium, private oprf: OPRF) {}
+
+    public sodiumAeadEncrypt(
+        key: Uint8Array,
+        plaintext: string
+    ): Sodium.CryptoBox {
+        const rawCiphertext = this.sodium.crypto_aead_chacha20poly1305_encrypt(
+            plaintext,
+            null,
+            null,
+            new Uint8Array(8),
+            key
+        );
+
+        const macTag = this.sodium.crypto_auth_hmacsha512(rawCiphertext, key);
+
+        return {
+            mac: macTag,
+            ciphertext: rawCiphertext,
+        };
+    }
+
+    public sodiumAeadDecrypt(key: Uint8Array, cryptoBox: Sodium.CryptoBox) {
+        const isValidHash = this.sodium.crypto_auth_hmacsha512_verify(
+            cryptoBox.mac,
+            cryptoBox.ciphertext,
+            key
+        );
+
+        if (isValidHash) {
+            try {
+                return this.sodium.crypto_aead_chacha20poly1305_decrypt(
+                    null,
+                    cryptoBox.ciphertext,
+                    null,
+                    new Uint8Array(8),
+                    key
+                );
+            } catch (error) {
+                return this.sodiumFromByte(255);
+            }
+        }
+
+        throw new Error(
+            'Invalid Message Authentication Code. Someone may have tampered with the ciphertext.'
+        );
+    }
+
+    public oprfKdf(pwd: string): Uint8Array {
+        return this.oprf.hashToPoint(pwd);
+    }
+
+    public oprfH(x: Uint8Array, mask: Uint8Array): Uint8Array {
+        return this.oprf.unmaskPoint(x, mask);
+    }
+
+    public oprfH1(x: Uint8Array): IMaskedData {
+        return this.oprf.maskPoint(x);
+    }
+
+    public oprfRaise(x: Uint8Array, y: Uint8Array): Uint8Array {
+        return this.oprf.scalarMult(x, y);
+    }
+
+    public genericHash(x: Uint8Array): Uint8Array {
+        return this.sodium.crypto_core_ristretto255_from_hash(x);
+    }
+
+    public iteratedHash(x: Uint8Array, t = 1000) {
+        return this.sodium.crypto_generichash(
+            x.length,
+            t === 1 ? x : this.iteratedHash(x, t - 1)
+        );
+    }
+
+    public oprfF(k: Uint8Array, x: Uint8Array) {
+        if (
+            this.sodium.crypto_core_ristretto255_is_valid_point(x) === false ||
+            this.sodium.is_zero(x)
+        ) {
+            x = this.oprf.hashToPoint(x.toString());
+        }
+
+        const _H1_x_ = this.oprfH1(x);
+        const H1_x = _H1_x_.point;
+        const mask = _H1_x_.mask;
+
+        const H1_x_k = this.oprfRaise(H1_x, k);
+
+        const unmasked = this.oprfH(H1_x_k, mask);
+        return unmasked;
+    }
+
+    public sodiumFromByte(n: number) {
+        return new Uint8Array(32).fill(n);
+    }
+
+    public KE(
+        p: Uint8Array,
+        x: Uint8Array,
+        P: Uint8Array,
+        X: Uint8Array,
+        X1: Uint8Array
+    ): Uint8Array {
+        const kx = this.oprf.scalarMult(X, x);
+        const kp = this.oprf.scalarMult(P, p);
+        const k = this.genericHash(
+            this.sodium.crypto_core_ristretto255_add(kx, kp)
+        );
+        return k;
+    }
+}
