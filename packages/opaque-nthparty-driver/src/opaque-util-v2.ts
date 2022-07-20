@@ -86,7 +86,7 @@ export class OpaqueNthPartyUtilV2 {
             this.sodium.crypto_core_ristretto255_is_valid_point(x) === false ||
             this.sodium.is_zero(x)
         ) {
-            x = this.oprf.hashToPoint(x.toString());
+            x = this.oprf.hashToPoint(new TextDecoder().decode(x));
         }
 
         const _H1_x_ = this.oprfH1(x);
