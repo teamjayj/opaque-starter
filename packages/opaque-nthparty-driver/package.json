@@ -8,13 +8,13 @@
         "lint": "eslint ./src/*.ts*"
     },
     "devDependencies": {
-        "@jayj/pake": "*",
         "eslint": "^7.32.0",
         "eslint-config-custom": "*",
         "tsconfig": "*",
         "typescript": "^4.5.2"
     },
     "dependencies": {
+        "@jayj/pake": "*",
         "@nthparty/opaque": "^0.3.0"
     }
 }
