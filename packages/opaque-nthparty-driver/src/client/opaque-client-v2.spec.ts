@@ -19,6 +19,8 @@ describe('OPAQUE Client V2', () => {
         const utilV2 = new OpaqueNthPartyUtilV2(sodium, oprf);
         const protocolV2 = new OpaqueNthPartyProtocolClientV2(sodium, utilV2);
 
-        expect(await protocolV2.clientRegister('supersecret', 'bob')).toBe(1);
+        expect(
+            await protocolV2.createRegistrationRequest('supersecret', 'bob')
+        ).toBe(1);
     });
 });

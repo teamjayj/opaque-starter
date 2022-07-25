@@ -20,14 +20,17 @@ export class OpaqueNthPartyDriver
     }
 
     async registerAsClient(password: string, userId: string): Promise<void> {
-        this.protocol?.clientRegister(password, userId);
+        this.protocol?.createRegistrationRequest(password, userId);
     }
 
     async authenticateAsClient(
         password: string,
         userId: string
     ): Promise<void> {
-        const token = await this.protocol?.clientAuthenticate(password, userId);
+        const token = await this.protocol?.createRegistrationRequest(
+            password,
+            userId
+        );
     }
 
     async registerAsServer(): Promise<void> {}

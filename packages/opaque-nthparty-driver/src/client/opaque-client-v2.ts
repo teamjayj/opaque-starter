@@ -1,4 +1,10 @@
-import { Envelope } from '../common/types';
+import {
+    ClientCredentialRequest,
+    ClientRegistrationRequest,
+    Envelope,
+    OperationId,
+    UserId,
+} from '../common/types';
 import { OpaqueNthPartyUtilV2 } from '../common/opaque-util-v2';
 import Sodium from 'libsodium-wrappers-sumo';
 import { OpaqueNthPartyProtocolV2 } from '../common/opaque-v2';
@@ -8,62 +14,70 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
         super(sodium, util);
     }
 
-    async clientRegister(
+    /**
+     * Creates client registration request
+     *
+     * @param password - plaintext password
+     * @param userId - user identifier such as username
+     * @param opId - operation ID
+     * @returns
+     */
+    public async createRegistrationRequest(
         password: string,
-        userId: string,
-        opId?: string | undefined
-    ): Promise<{ userId: string; hashedPassword: string }> {
+        userId: UserId,
+        opId?: OperationId
+    ): Promise<ClientRegistrationRequest> {
         const hashedPassword = this.util.oprfKdf(password);
 
-        // send userid and hashedpassword
         return {
             userId,
             hashedPassword: this.sodium.to_hex(hashedPassword),
         };
     }
 
-    async clientAuthenticate(
-        password: string,
-        userId: string,
-        iterations?: number | undefined,
-        opId?: string | undefined
-    ): Promise<string> {
-        return 'stub';
-    }
-
-    private async clientBeginAuthenticate(password: string) {
+    public async clientBeginAuthenticate(
+        password: string
+    ): Promise<ClientCredentialRequest> {
         const r = this.sodium.crypto_core_ristretto255_scalar_random();
         const xu = this.sodium.crypto_core_ristretto255_scalar_random();
 
+        this.set('r', r);
+        this.set('xu', xu);
+
         const hashedPassword = this.util.oprfKdf(password);
         const { point, mask } = this.util.oprfH1(hashedPassword);
-        const alpha = this.util.oprfRaise(point, r);
 
+        const alpha = this.util.oprfRaise(point, r);
         const Xu = this.sodium.crypto_scalarmult_ristretto255_base(xu);
 
-        // give alpha, Xu
-        return { alpha, Xu, mask };
+        this.set('mask', mask);
+        this.set('Xu', Xu);
+
+        return {
+            alpha: this.sodium.to_hex(alpha),
+            Xu: this.sodium.to_hex(Xu),
+        };
     }
 
-    private async clientKeyExchangeAuthenticate(
+    public async clientKeyExchangeAuthenticate(
         beta: Uint8Array,
-        mask: Uint8Array,
-        r: Uint8Array,
-        xu: Uint8Array,
-        Xu: Uint8Array,
         Xs: Uint8Array,
         envelope: Envelope,
         iterations?: number | undefined
     ) {
         // get beta from server
-
         if (!this.util.isValidPoint(beta)) {
             throw new Error('Authentication failed @ C1');
         }
 
-        const r_inv = this.sodium.crypto_core_ristretto255_scalar_invert(r);
+        const rInverse = this.sodium.crypto_core_ristretto255_scalar_invert(
+            this.get('r')
+        );
         const rw = this.util.iteratedHash(
-            this.util.oprfH(this.util.oprfRaise(beta, r_inv), mask),
+            this.util.oprfH(
+                this.util.oprfRaise(beta, rInverse),
+                this.get('mask')
+            ),
             iterations
         );
 
@@ -90,7 +104,13 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
             envelope.encryptedServerPublicKey
         );
 
-        const K = this.util.KE(clientPrivateKey, xu, serverPublicKey, Xs, Xu);
+        const K = this.util.KE(
+            clientPrivateKey,
+            this.get('xu'),
+            serverPublicKey,
+            Xs,
+            this.get('Xu')
+        );
 
         const sessionKey = this.util.oprfF(K, this.util.sodiumFromByte(0));
         const As = this.util.oprfF(K, this.util.sodiumFromByte(1));
@@ -108,7 +128,7 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
         };
     }
 
-    async clientFinalizeAuthenticate(
+    public clientFinalizeAuthenticate(
         serverSuccess: boolean,
         sessionKey: Uint8Array
     ) {

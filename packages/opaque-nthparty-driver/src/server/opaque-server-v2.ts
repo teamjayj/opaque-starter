@@ -1,4 +1,10 @@
-import { Pepper, UserRecord } from '../common/types';
+import {
+    Envelope,
+    Pepper,
+    ServerCredentialResponse,
+    StringEnvelope,
+    UserRecord,
+} from '../common/types';
 import { OpaqueNthPartyUtilV2 } from '../common/opaque-util-v2';
 import Sodium from 'libsodium-wrappers-sumo';
 import { OpaqueNthPartyProtocolV2 } from '../common/opaque-v2';
@@ -8,7 +14,17 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
         super(sodium, util);
     }
 
-    async serverRegister(
+    /**
+     * Accomodates a user registration request.
+     *
+     * @param userId
+     * @param hashedPassword
+     * @param iterations
+     * @param opId
+     *
+     * @returns a user record to be persisted in a database
+     */
+    public async serverRegister(
         userId: string,
         hashedPassword: Uint8Array,
         iterations?: number | undefined,
@@ -59,28 +75,20 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
         };
     }
 
-    async serverAuthenticate(
-        userId: string,
-        pepper: Pepper,
-        opId?: string | undefined
-    ): Promise<string> {
-        return 'stub';
-    }
-
-    private async serverBeginAuthenticate(
+    public async serverBeginAuthenticate(
         alpha: Uint8Array,
         Xu: Uint8Array,
         pepper: Pepper,
         opId?: string
-    ) {
+    ): Promise<ServerCredentialResponse> {
         if (!this.util.isValidPoint(alpha)) {
             throw new Error(
                 'Authentication failed. Alpha is not a group element.'
             );
         }
 
-        const xs = this.sodium.crypto_core_ristretto255_scalar_random();
         const beta = this.util.oprfRaise(alpha, pepper.clientOPRFKey);
+        const xs = this.sodium.crypto_core_ristretto255_scalar_random();
         const Xs = this.sodium.crypto_scalarmult_ristretto255_base(xs);
 
         const K = this.util.KE(
@@ -92,27 +100,28 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
         );
 
         // SK = session key
-        const sessionKey = this.util.oprfF(K, this.util.sodiumFromByte(0));
+        const SK = this.util.oprfF(K, this.util.sodiumFromByte(0));
         const As = this.util.oprfF(K, this.util.sodiumFromByte(1));
         const Au = this.util.oprfF(K, this.util.sodiumFromByte(2));
 
+        this.set('SK', SK);
+        this.set('Au', Au);
+
         // give beta, Xs, c, As
         return {
-            beta,
-            Xs,
-            c: pepper.envelope,
-            As,
+            beta: this.sodium.to_hex(beta),
+            Xs: this.sodium.to_hex(Xs),
+            envelope: this.util.toStringEnvelope(pepper.envelope),
+            As: this.sodium.to_hex(As),
         };
     }
 
-    private async serverFinalizeAuthenticate(
-        serverAu: Uint8Array,
-        clientAu: Uint8Array,
-        sessionKey: Uint8Array
+    public async serverFinalizeAuthenticate(
+        clientAu: Uint8Array
     ): Promise<string> {
         // The comparable value of 0 means equality
-        if (this.sodium.compare(serverAu, clientAu) === 0) {
-            const token = this.sodium.to_hex(sessionKey);
+        if (this.sodium.compare(this.get('Au'), clientAu) === 0) {
+            const token = this.sodium.to_hex(this.get('SK'));
             return token;
         } else {
             throw new Error('Authentication failed');
