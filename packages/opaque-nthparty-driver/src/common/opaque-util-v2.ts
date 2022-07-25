@@ -1,6 +1,7 @@
 import OPRF from 'oprf';
-import Sodium, { CryptoBox } from 'libsodium-wrappers-sumo';
+import Sodium, { CryptoBox, StringCryptoBox } from 'libsodium-wrappers-sumo';
 import { IMaskedData } from 'oprf/build/oprf.slim';
+import { Envelope, StringEnvelope } from './types';
 
 export class OpaqueNthPartyUtilV2 {
     constructor(private sodium: typeof Sodium, private oprf: OPRF) {}
@@ -117,5 +118,30 @@ export class OpaqueNthPartyUtilV2 {
 
     public isValidPoint(point: Uint8Array): boolean {
         return this.sodium.crypto_core_ristretto255_is_valid_point(point);
+    }
+
+    public toStringEnvelope({
+        encryptedClientPrivateKey,
+        encryptedClientPublicKey,
+        encryptedServerPublicKey,
+    }: Envelope): StringEnvelope {
+        return {
+            encryptedClientPrivateKey: this.toStringCryptoBox(
+                encryptedClientPrivateKey
+            ),
+            encryptedClientPublicKey: this.toStringCryptoBox(
+                encryptedClientPublicKey
+            ),
+            encryptedServerPublicKey: this.toStringCryptoBox(
+                encryptedServerPublicKey
+            ),
+        };
+    }
+
+    public toStringCryptoBox({ ciphertext, mac }: CryptoBox): StringCryptoBox {
+        return {
+            ciphertext: this.sodium.to_hex(ciphertext),
+            mac: this.sodium.to_hex(mac),
+        };
     }
 }
