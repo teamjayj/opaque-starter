@@ -111,7 +111,7 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
             beta: this.sodium.to_hex(beta),
             Xs: this.sodium.to_hex(Xs),
             As: this.sodium.to_hex(As),
-            envelope: this.util.toStringEnvelope(pepper.envelope),
+            envelope: this.util.envelopeToStringEnvelope(pepper.envelope),
         };
     }
 
