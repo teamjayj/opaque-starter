@@ -62,6 +62,7 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
     public async clientKeyExchangeAuthenticate(
         beta: Uint8Array,
         Xs: Uint8Array,
+        serverAs: Uint8Array,
         envelope: Envelope,
         iterations?: number | undefined
     ) {
@@ -86,11 +87,7 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
             envelope.encryptedClientPrivateKey
         );
 
-        if (
-            !this.sodium.crypto_core_ristretto255_is_valid_point(
-                clientPrivateKey
-            )
-        ) {
+        if (!this.util.isValidPoint(clientPrivateKey)) {
             throw new Error('Authentication failed @ C2');
         }
 
@@ -116,9 +113,7 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
         const As = this.util.oprfF(K, this.util.sodiumFromByte(1));
         const Au = this.util.oprfF(K, this.util.sodiumFromByte(2));
 
-        // get As from server
-        const __As = new Uint8Array();
-        if (this.sodium.compare(As, __As) !== 0) {
+        if (this.sodium.compare(As, serverAs) !== 0) {
             throw new Error('Authentication failed @C3');
         }
 
