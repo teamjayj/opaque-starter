@@ -107,12 +107,11 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
         this.set('SK', SK);
         this.set('Au', Au);
 
-        // give beta, Xs, c, As
         return {
             beta: this.sodium.to_hex(beta),
             Xs: this.sodium.to_hex(Xs),
-            envelope: this.util.toStringEnvelope(pepper.envelope),
             As: this.sodium.to_hex(As),
+            envelope: this.util.toStringEnvelope(pepper.envelope),
         };
     }
 
