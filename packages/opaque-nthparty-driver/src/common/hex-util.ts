@@ -44,4 +44,4 @@ const fromHex = (hexString: string): Uint8Array => {
  * @returns - Uint8Array representation
  */
 export const hexStringToUint8Array = (str: string): Uint8Array =>
-    Uint8Array.from(Buffer.from(str, 'hex'));
+    Uint8Array.from(fromHex(str));
