@@ -15,7 +15,11 @@ export class OpaqueNthPartyProtocolV2 {
         this.store[key] = value;
     }
 
-    protected get(key: string): Uint8Array {
+    public get(key: string): Uint8Array {
         return this.store[key];
+    }
+
+    public clearStore(): void {
+        this.store = {};
     }
 }
