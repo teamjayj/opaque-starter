@@ -7,14 +7,14 @@ export type Envelope = {
 };
 
 export type Pepper = {
-    ks: Uint8Array;
-    ps: Uint8Array;
-    Ps: Uint8Array;
-    Pu: Uint8Array;
+    clientOPRFKey: Uint8Array;
+    clientPublicKey: Uint8Array;
+    serverPrivateKey: Uint8Array;
+    serverPublicKey: Uint8Array;
     envelope: Envelope;
 };
 
 export type UserRecord = {
-    id: any;
+    userId: any;
     pepper: Pepper;
 };
