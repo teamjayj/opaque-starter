@@ -82,10 +82,7 @@ export class OpaqueNthPartyUtilV2 {
     }
 
     public oprfF(k: Uint8Array, x: Uint8Array): Uint8Array {
-        if (
-            this.sodium.crypto_core_ristretto255_is_valid_point(x) === false ||
-            this.sodium.is_zero(x)
-        ) {
+        if (!this.isValidPoint(x) || this.sodium.is_zero(x)) {
             x = this.oprf.hashToPoint(new TextDecoder().decode(x));
         }
 
@@ -116,5 +113,9 @@ export class OpaqueNthPartyUtilV2 {
             this.sodium.crypto_core_ristretto255_add(kx, kp)
         );
         return k;
+    }
+
+    public isValidPoint(point: Uint8Array): boolean {
+        return this.sodium.crypto_core_ristretto255_is_valid_point(point);
     }
 }
