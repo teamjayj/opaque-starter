@@ -1,15 +1,17 @@
 import { CryptoBox } from 'libsodium-wrappers-sumo';
 
+export type Envelope = {
+    encryptedClientPrivateKey: CryptoBox;
+    encryptedClientPublicKey: CryptoBox;
+    encryptedServerPublicKey: CryptoBox;
+};
+
 export type Pepper = {
     ks: Uint8Array;
     ps: Uint8Array;
     Ps: Uint8Array;
     Pu: Uint8Array;
-    c: {
-        pu: CryptoBox;
-        Pu: CryptoBox;
-        Ps: CryptoBox;
-    };
+    envelope: Envelope;
 };
 
 export type UserRecord = {
