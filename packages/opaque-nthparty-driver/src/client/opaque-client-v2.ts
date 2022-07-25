@@ -1,7 +1,7 @@
-import { Envelope } from './types';
-import { OpaqueNthPartyUtilV2 } from './opaque-util-v2';
+import { Envelope } from '../common/types';
+import { OpaqueNthPartyUtilV2 } from '../common/opaque-util-v2';
 import Sodium from 'libsodium-wrappers-sumo';
-import { OpaqueNthPartyProtocolV2 } from './opaque-v2';
+import { OpaqueNthPartyProtocolV2 } from '../common/opaque-v2';
 
 export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
     constructor(sodium: typeof Sodium, util: OpaqueNthPartyUtilV2) {

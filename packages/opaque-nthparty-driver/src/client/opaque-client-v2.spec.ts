@@ -1,5 +1,5 @@
 import sodium from 'libsodium-wrappers-sumo';
-import { OpaqueNthPartyUtilV2 } from './opaque-util-v2';
+import { OpaqueNthPartyUtilV2 } from '../common/opaque-util-v2';
 import OPRF from 'oprf';
 import { OpaqueNthPartyProtocolClientV2 } from './opaque-client-v2';
 
