@@ -2,6 +2,7 @@ import OPRF from 'oprf';
 import Sodium, { CryptoBox, StringCryptoBox } from 'libsodium-wrappers-sumo';
 import { IMaskedData } from 'oprf/build/oprf.slim';
 import { Envelope, StringEnvelope } from './types';
+import { hexStringToUint8Array } from './hex-util';
 
 export class OpaqueNthPartyUtilV2 {
     constructor(private sodium: typeof Sodium, private oprf: OPRF) {}
@@ -84,7 +85,7 @@ export class OpaqueNthPartyUtilV2 {
 
     public oprfF(k: Uint8Array, x: Uint8Array): Uint8Array {
         if (!this.isValidPoint(x) || this.sodium.is_zero(x)) {
-            x = this.oprf.hashToPoint(new TextDecoder().decode(x));
+            x = this.oprf.hashToPoint(this.sodium.to_hex(x));
         }
 
         const _H1_x_ = this.oprfH1(x);
@@ -120,25 +121,56 @@ export class OpaqueNthPartyUtilV2 {
         return this.sodium.crypto_core_ristretto255_is_valid_point(point);
     }
 
-    public toStringEnvelope({
+    public stringEnvelopeToEnvelope({
         encryptedClientPrivateKey,
         encryptedClientPublicKey,
         encryptedServerPublicKey,
-    }: Envelope): StringEnvelope {
+    }: StringEnvelope): Envelope {
         return {
-            encryptedClientPrivateKey: this.toStringCryptoBox(
+            encryptedClientPrivateKey: this.stringCryptoBoxtoCryptoBox(
                 encryptedClientPrivateKey
             ),
-            encryptedClientPublicKey: this.toStringCryptoBox(
+            encryptedClientPublicKey: this.stringCryptoBoxtoCryptoBox(
                 encryptedClientPublicKey
             ),
-            encryptedServerPublicKey: this.toStringCryptoBox(
+            encryptedServerPublicKey: this.stringCryptoBoxtoCryptoBox(
                 encryptedServerPublicKey
             ),
         };
     }
 
-    public toStringCryptoBox({ ciphertext, mac }: CryptoBox): StringCryptoBox {
+    public envelopeToStringEnvelope({
+        encryptedClientPrivateKey,
+        encryptedClientPublicKey,
+        encryptedServerPublicKey,
+    }: Envelope): StringEnvelope {
+        return {
+            encryptedClientPrivateKey: this.cryptoBoxtoStringCryptoBox(
+                encryptedClientPrivateKey
+            ),
+            encryptedClientPublicKey: this.cryptoBoxtoStringCryptoBox(
+                encryptedClientPublicKey
+            ),
+            encryptedServerPublicKey: this.cryptoBoxtoStringCryptoBox(
+                encryptedServerPublicKey
+            ),
+        };
+    }
+
+    public stringCryptoBoxtoCryptoBox({
+        ciphertext,
+        mac,
+    }: StringCryptoBox): CryptoBox {
+        return {
+            ciphertext: hexStringToUint8Array(ciphertext),
+            mac: hexStringToUint8Array(mac),
+        };
+    }
+
+    public cryptoBoxtoStringCryptoBox({
+        ciphertext,
+        mac,
+    }: CryptoBox): StringCryptoBox {
         return {
             ciphertext: this.sodium.to_hex(ciphertext),
             mac: this.sodium.to_hex(mac),
