@@ -44,8 +44,7 @@ describe('Crypto', () => {
         it('should iterate hash uniquely', () => {
             const hashedPassword = util.oprfKdfHashToPoint(plaintextPassword);
 
-            const clientOPRFKey =
-                sodium.crypto_core_ristretto255_scalar_random();
+            const clientOPRFKey = util.generateRandomPoint();
 
             const passwordOPRFA = util.iteratedHash(
                 util.oprfFUnmaskPointWithRandom(clientOPRFKey, hashedPassword),
@@ -61,11 +60,8 @@ describe('Crypto', () => {
         });
 
         it('should create random key pairs consecutively', () => {
-            const ps = sodium.crypto_core_ristretto255_scalar_random();
-            const Ps = sodium.crypto_scalarmult_ristretto255_base(ps);
-
-            const pu = sodium.crypto_core_ristretto255_scalar_random();
-            const Pu = sodium.crypto_scalarmult_ristretto255_base(pu);
+            const { privateKey: ps, publicKey: Ps } = util.generateKeyPair();
+            const { privateKey: pu, publicKey: Pu } = util.generateKeyPair();
 
             expect(ps).not.toEqual(pu);
             expect(Ps).not.toEqual(Pu);

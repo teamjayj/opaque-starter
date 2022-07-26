@@ -23,15 +23,14 @@ describe('Opaque util', () => {
     it('should convert cryptobox to string cryptobox', () => {
         const hashedPassword = util.oprfKdfHashToPoint(plaintextPassword);
 
-        const clientOPRFKey = sodium.crypto_core_ristretto255_scalar_random();
+        const clientOPRFKey = util.generateRandomPoint();
 
         const passwordOPRF = util.iteratedHash(
             util.oprfFUnmaskPointWithRandom(clientOPRFKey, hashedPassword),
             1000
         );
 
-        const clientPrivateKey =
-            sodium.crypto_core_ristretto255_scalar_random();
+        const clientPrivateKey = util.generateRandomPoint();
 
         const encryptedClientPrivateKey = util.sodiumAeadEncrypt(
             passwordOPRF,
@@ -56,15 +55,14 @@ describe('Opaque util', () => {
     it('should convert string cryptobox to cryptobox', () => {
         const hashedPassword = util.oprfKdfHashToPoint(plaintextPassword);
 
-        const clientOPRFKey = sodium.crypto_core_ristretto255_scalar_random();
+        const clientOPRFKey = util.generateRandomPoint();
 
         const passwordOPRF = util.iteratedHash(
             util.oprfFUnmaskPointWithRandom(clientOPRFKey, hashedPassword),
             1000
         );
 
-        const clientPrivateKey =
-            sodium.crypto_core_ristretto255_scalar_random();
+        const clientPrivateKey = util.generateRandomPoint();
 
         const encryptedStringClientPrivateKey = util.cryptoBoxtoStringCryptoBox(
             util.sodiumAeadEncrypt(passwordOPRF, clientPrivateKey)
@@ -88,22 +86,17 @@ describe('Opaque util', () => {
     it('should convert string envelope to envelope', () => {
         const hashedPassword = util.oprfKdfHashToPoint(plaintextPassword);
 
-        const clientOPRFKey = sodium.crypto_core_ristretto255_scalar_random();
+        const clientOPRFKey = util.generateRandomPoint();
 
         const passwordOPRF = util.iteratedHash(
             util.oprfFUnmaskPointWithRandom(clientOPRFKey, hashedPassword),
             1000
         );
 
-        const clientPrivateKey =
-            sodium.crypto_core_ristretto255_scalar_random();
-        const clientPublicKey =
-            sodium.crypto_scalarmult_ristretto255_base(clientPrivateKey);
+        const { publicKey: serverPublicKey } = util.generateKeyPair();
 
-        const serverPrivateKey =
-            sodium.crypto_core_ristretto255_scalar_random();
-        const serverPublicKey =
-            sodium.crypto_scalarmult_ristretto255_base(serverPrivateKey);
+        const { privateKey: clientPrivateKey, publicKey: clientPublicKey } =
+            util.generateKeyPair();
 
         const stringEnvelope = util.envelopeToStringEnvelope({
             encryptedClientPrivateKey: util.sodiumAeadEncrypt(
@@ -166,22 +159,17 @@ describe('Opaque util', () => {
     it('should convert envelope to string envelope', () => {
         const hashedPassword = util.oprfKdfHashToPoint(plaintextPassword);
 
-        const clientOPRFKey = sodium.crypto_core_ristretto255_scalar_random();
+        const clientOPRFKey = util.generateRandomPoint();
 
         const passwordOPRF = util.iteratedHash(
             util.oprfFUnmaskPointWithRandom(clientOPRFKey, hashedPassword),
             1000
         );
 
-        const clientPrivateKey =
-            sodium.crypto_core_ristretto255_scalar_random();
-        const clientPublicKey =
-            sodium.crypto_scalarmult_ristretto255_base(clientPrivateKey);
+        const { publicKey: serverPublicKey } = util.generateKeyPair();
 
-        const serverPrivateKey =
-            sodium.crypto_core_ristretto255_scalar_random();
-        const serverPublicKey =
-            sodium.crypto_scalarmult_ristretto255_base(serverPrivateKey);
+        const { privateKey: clientPrivateKey, publicKey: clientPublicKey } =
+            util.generateKeyPair();
 
         const encryptedClientPrivateKey = util.sodiumAeadEncrypt(
             passwordOPRF,

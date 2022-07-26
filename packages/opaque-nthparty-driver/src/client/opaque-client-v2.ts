@@ -42,16 +42,13 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
         const { point, mask } =
             this.util.oprfH1MaskPointWithRandom(hashedPassword);
 
-        const r = this.sodium.crypto_core_ristretto255_scalar_random();
+        const r = this.util.generateRandomPoint();
         const alpha = this.util.oprfRaiseScalarMult(point, r);
 
-        const clientSessionPrivateKey =
-            this.sodium.crypto_core_ristretto255_scalar_random();
-
-        const clientSessionPublicKey =
-            this.sodium.crypto_scalarmult_ristretto255_base(
-                clientSessionPrivateKey
-            );
+        const {
+            privateKey: clientSessionPrivateKey,
+            publicKey: clientSessionPublicKey,
+        } = this.util.generateKeyPair();
 
         this.set('r', r);
         this.set('xu', clientSessionPrivateKey);

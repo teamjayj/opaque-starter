@@ -30,23 +30,17 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
         iterations?: number | undefined,
         opId?: string | undefined
     ): Promise<UserRecord> {
-        const clientOPRFKey =
-            this.sodium.crypto_core_ristretto255_scalar_random();
-
+        const clientOPRFKey = this.util.generateRandomPoint();
         const passwordOPRF = this.util.iteratedHash(
             this.util.oprfFUnmaskPointWithRandom(clientOPRFKey, hashedPassword),
             iterations
         );
 
-        const serverPrivateKey =
-            this.sodium.crypto_core_ristretto255_scalar_random();
-        const serverPublicKey =
-            this.sodium.crypto_scalarmult_ristretto255_base(serverPrivateKey);
+        const { privateKey: serverPrivateKey, publicKey: serverPublicKey } =
+            this.util.generateKeyPair();
 
-        const clientPrivateKey =
-            this.sodium.crypto_core_ristretto255_scalar_random();
-        const clientPublicKey =
-            this.sodium.crypto_scalarmult_ristretto255_base(clientPrivateKey);
+        const { privateKey: clientPrivateKey, publicKey: clientPublicKey } =
+            this.util.generateKeyPair();
 
         const pepper: Pepper = {
             clientOPRFKey,
@@ -90,12 +84,10 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
             pepper;
         const beta = this.util.oprfRaiseScalarMult(alpha, clientOPRFKey);
 
-        const serverSessionPrivateKey =
-            this.sodium.crypto_core_ristretto255_scalar_random();
-        const serverSessionPublicKey =
-            this.sodium.crypto_scalarmult_ristretto255_base(
-                serverSessionPrivateKey
-            );
+        const {
+            privateKey: serverSessionPrivateKey,
+            publicKey: serverSessionPublicKey,
+        } = this.util.generateKeyPair();
 
         const sessionOPRFKey = this.util.keyExchange(
             serverPrivateKey,

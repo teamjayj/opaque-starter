@@ -1,5 +1,9 @@
 import OPRF from 'oprf';
-import Sodium, { CryptoBox, StringCryptoBox } from 'libsodium-wrappers-sumo';
+import Sodium, {
+    CryptoBox,
+    KeyPair,
+    StringCryptoBox,
+} from 'libsodium-wrappers-sumo';
 import { IMaskedData } from 'oprf/build/oprf.slim';
 import { Envelope, StringEnvelope } from './types';
 
@@ -175,6 +179,22 @@ export class OpaqueNthPartyUtilV2 {
         return {
             ciphertext: this.sodium.to_hex(ciphertext),
             mac: this.sodium.to_hex(mac),
+        };
+    }
+
+    public generateRandomPoint(): Uint8Array {
+        return this.sodium.crypto_core_ristretto255_scalar_random();
+    }
+
+    public generateKeyPair(): KeyPair {
+        const privateKey = this.generateRandomPoint();
+        const publicKey =
+            this.sodium.crypto_scalarmult_ristretto255_base(privateKey);
+
+        return {
+            keyType: 'curve25519',
+            privateKey,
+            publicKey,
         };
     }
 }
