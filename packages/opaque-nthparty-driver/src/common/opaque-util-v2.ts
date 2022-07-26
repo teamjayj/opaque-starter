@@ -2,14 +2,13 @@ import OPRF from 'oprf';
 import Sodium, { CryptoBox, StringCryptoBox } from 'libsodium-wrappers-sumo';
 import { IMaskedData } from 'oprf/build/oprf.slim';
 import { Envelope, StringEnvelope } from './types';
-import { hexStringToUint8Array } from './hex-util';
 
 export class OpaqueNthPartyUtilV2 {
     constructor(private sodium: typeof Sodium, private oprf: OPRF) {}
 
     public sodiumAeadEncrypt(
         key: Uint8Array,
-        plaintext: string | Uint8Array
+        plaintext: Uint8Array
     ): CryptoBox {
         const rawCiphertext = this.sodium.crypto_aead_chacha20poly1305_encrypt(
             plaintext,
@@ -162,8 +161,8 @@ export class OpaqueNthPartyUtilV2 {
         mac,
     }: StringCryptoBox): CryptoBox {
         return {
-            ciphertext: hexStringToUint8Array(ciphertext),
-            mac: hexStringToUint8Array(mac),
+            ciphertext: this.sodium.from_hex(ciphertext),
+            mac: this.sodium.from_hex(mac),
         };
     }
 
