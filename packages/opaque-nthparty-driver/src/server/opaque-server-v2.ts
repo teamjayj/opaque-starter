@@ -1,10 +1,4 @@
-import {
-    Envelope,
-    Pepper,
-    ServerCredentialResponse,
-    StringEnvelope,
-    UserRecord,
-} from '../common/types';
+import { Pepper, ServerCredentialResponse, UserRecord } from '../common/types';
 import { OpaqueNthPartyUtilV2 } from '../common/opaque-util-v2';
 import Sodium from 'libsodium-wrappers-sumo';
 import { OpaqueNthPartyProtocolV2 } from '../common/opaque-v2';
