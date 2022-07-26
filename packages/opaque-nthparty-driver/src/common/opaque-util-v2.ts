@@ -183,7 +183,7 @@ export class OpaqueNthPartyUtilV2 {
     }
 
     public generateRandomPoint(): Uint8Array {
-        return this.sodium.crypto_core_ristretto255_scalar_random();
+        return this.sodium.crypto_core_ristretto255_random();
     }
 
     public generateKeyPair(): KeyPair {
