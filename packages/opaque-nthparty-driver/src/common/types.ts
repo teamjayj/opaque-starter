@@ -45,3 +45,7 @@ export interface ServerCredentialResponse {
     As: string;
     envelope: StringEnvelope;
 }
+
+export interface ClientKeyExchangeRequest {
+    Au: string;
+}

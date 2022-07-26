@@ -151,8 +151,17 @@ describe('OPAQUE Client V2', () => {
             clientUtil.stringEnvelopeToEnvelope(credentialResponse.envelope)
         );
 
-        // 3: Client -> Server
-
         expect(request).toBeTruthy();
+        expect(request.Au).toBeDefined();
+
+        // 3: Client -> Server (key exchange request)
+
+        const response = await server.serverFinalizeAuthenticate(
+            sodium.from_hex(request.Au)
+        );
+
+        // 3: Client <- Server (token)
+
+        expect(response).toBeTruthy();
     });
 });

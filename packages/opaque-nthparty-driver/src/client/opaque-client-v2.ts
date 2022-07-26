@@ -1,5 +1,6 @@
 import {
     ClientCredentialRequest,
+    ClientKeyExchangeRequest,
     ClientRegistrationRequest,
     Envelope,
     OperationId,
@@ -67,7 +68,7 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
         serverAuthPublicKey: Uint8Array,
         envelope: Envelope,
         iterations?: number | undefined
-    ) {
+    ): Promise<ClientKeyExchangeRequest> {
         if (!this.util.isValidPoint(beta)) {
             throw new Error('Authentication failed @ C1');
         }
@@ -84,23 +85,14 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
             iterations
         );
 
-        const {
-            encryptedClientPrivateKey,
-            encryptedClientPublicKey,
-            encryptedServerPublicKey,
-        } = envelope;
+        const { encryptedClientPrivateKey, encryptedServerPublicKey } =
+            envelope;
 
         const clientPrivateKey = this.util.sodiumAeadDecrypt(
             rw,
             encryptedClientPrivateKey
         );
 
-        const clientPublicKey = this.util.sodiumAeadDecrypt(
-            rw,
-            encryptedClientPublicKey
-        );
-
-        // potential fix: assert decrypted public key
         if (!this.util.isValidPoint(clientPrivateKey)) {
             throw new Error('Authentication failed @ C2');
         }
@@ -110,46 +102,38 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
             encryptedServerPublicKey
         );
 
-        const K = this.util.keyExchange(
+        const clientSessionPrivateKey = this.get('xu');
+        const sessionOPRFKey = this.util.keyExchange(
             clientPrivateKey,
-            this.get('xu'),
+            clientSessionPrivateKey,
             serverPublicKey,
             serverSessionPublicKey
         );
 
-        const sessionKey = this.util.oprfFUnmaskPointWithRandom(
-            K,
+        const sessionOPRF = this.util.oprfFUnmaskPointWithRandom(
+            sessionOPRFKey,
             this.util.sodiumFromByte(0)
         );
-        const As = this.util.oprfFUnmaskPointWithRandom(
-            K,
+        const localServerAuthPublicKey = this.util.oprfFUnmaskPointWithRandom(
+            sessionOPRFKey,
             this.util.sodiumFromByte(1)
         );
-        const Au = this.util.oprfFUnmaskPointWithRandom(
-            K,
+        const clientAuthPublicKey = this.util.oprfFUnmaskPointWithRandom(
+            sessionOPRFKey,
             this.util.sodiumFromByte(2)
         );
 
-        if (this.sodium.compare(As, serverAuthPublicKey) !== 0) {
+        if (
+            this.sodium.compare(
+                localServerAuthPublicKey,
+                serverAuthPublicKey
+            ) !== 0
+        ) {
             throw new Error('Authentication failed @C3');
         }
 
-        // send Au to server
         return {
-            Au,
+            Au: this.sodium.to_hex(clientAuthPublicKey),
         };
-    }
-
-    public clientFinalizeAuthenticate(
-        serverSuccess: boolean,
-        sessionKey: Uint8Array
-    ) {
-        // if server finalizes auth successfully
-        if (serverSuccess) {
-            const token = this.sodium.to_hex(sessionKey);
-            return token;
-        } else {
-            throw new Error('Authentication failed @C4');
-        }
     }
 }

@@ -105,13 +105,13 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
             sessionOPRFKey,
             this.util.sodiumFromByte(1)
         );
-        const clientAuthPublicKey = this.util.oprfFUnmaskPointWithRandom(
+        const localClientAuthPublicKey = this.util.oprfFUnmaskPointWithRandom(
             sessionOPRFKey,
             this.util.sodiumFromByte(2)
         );
 
         this.set('SK', sessionOPRF);
-        this.set('Au', clientAuthPublicKey);
+        this.set('Au', localClientAuthPublicKey);
 
         return {
             beta: this.sodium.to_hex(beta),
@@ -122,14 +122,21 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
     }
 
     public async serverFinalizeAuthenticate(
-        clientAu: Uint8Array
+        clientAuthPublicKey: Uint8Array
     ): Promise<string> {
         // The comparable value of 0 means equality
-        if (this.sodium.compare(this.get('Au'), clientAu) === 0) {
-            const token = this.sodium.to_hex(this.get('SK'));
+        const localClientAuthPublicKey = this.get('Au');
+        if (
+            this.sodium.compare(
+                localClientAuthPublicKey,
+                clientAuthPublicKey
+            ) === 0
+        ) {
+            const sessionOPRF = this.get('SK');
+            const token = this.sodium.to_hex(sessionOPRF);
             return token;
         } else {
-            throw new Error('Authentication failed');
+            throw new Error('Authentication failed @ C4');
         }
     }
 }
