@@ -34,7 +34,7 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
             this.sodium.crypto_core_ristretto255_scalar_random();
 
         const passwordOPRF = this.util.iteratedHash(
-            this.util.oprfF(clientOPRFKey, hashedPassword),
+            this.util.oprfFUnmaskPointWithRandom(clientOPRFKey, hashedPassword),
             iterations
         );
 
@@ -77,7 +77,7 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
 
     public async serverBeginAuthenticate(
         alpha: Uint8Array,
-        Xu: Uint8Array,
+        clientSessionPublicKey: Uint8Array,
         pepper: Pepper,
         opId?: string
     ): Promise<ServerCredentialResponse> {
@@ -86,32 +86,46 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
                 'Authentication failed @ C0. Alpha is not a group element.'
             );
         }
+        const { clientOPRFKey, serverPrivateKey, clientPublicKey, envelope } =
+            pepper;
+        const beta = this.util.oprfRaiseScalarMult(alpha, clientOPRFKey);
 
-        const beta = this.util.oprfRaise(alpha, pepper.clientOPRFKey);
-        const xs = this.sodium.crypto_core_ristretto255_scalar_random();
-        const Xs = this.sodium.crypto_scalarmult_ristretto255_base(xs);
+        const serverSessionPrivateKey =
+            this.sodium.crypto_core_ristretto255_scalar_random();
+        const serverSessionPublicKey =
+            this.sodium.crypto_scalarmult_ristretto255_base(
+                serverSessionPrivateKey
+            );
 
-        const K = this.util.KE(
-            pepper.serverPrivateKey,
-            xs,
-            pepper.clientPublicKey,
-            Xu,
-            Xs
+        const sessionOPRFKey = this.util.keyExchange(
+            serverPrivateKey,
+            serverSessionPrivateKey,
+            clientPublicKey,
+            clientSessionPublicKey
         );
 
         // SK = session key
-        const SK = this.util.oprfF(K, this.util.sodiumFromByte(0));
-        const As = this.util.oprfF(K, this.util.sodiumFromByte(1));
-        const Au = this.util.oprfF(K, this.util.sodiumFromByte(2));
+        const sessionOPRF = this.util.oprfFUnmaskPointWithRandom(
+            sessionOPRFKey,
+            this.util.sodiumFromByte(0)
+        );
+        const serverAuthPublicKey = this.util.oprfFUnmaskPointWithRandom(
+            sessionOPRFKey,
+            this.util.sodiumFromByte(1)
+        );
+        const clientAuthPublicKey = this.util.oprfFUnmaskPointWithRandom(
+            sessionOPRFKey,
+            this.util.sodiumFromByte(2)
+        );
 
-        this.set('SK', SK);
-        this.set('Au', Au);
+        this.set('SK', sessionOPRF);
+        this.set('Au', clientAuthPublicKey);
 
         return {
             beta: this.sodium.to_hex(beta),
-            Xs: this.sodium.to_hex(Xs),
-            As: this.sodium.to_hex(As),
-            envelope: this.util.envelopeToStringEnvelope(pepper.envelope),
+            Xs: this.sodium.to_hex(serverSessionPublicKey),
+            As: this.sodium.to_hex(serverAuthPublicKey),
+            envelope: this.util.envelopeToStringEnvelope(envelope),
         };
     }
 

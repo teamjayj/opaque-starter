@@ -55,19 +55,19 @@ export class OpaqueNthPartyUtilV2 {
         );
     }
 
-    public oprfKdf(pwd: string): Uint8Array {
+    public oprfKdfHashToPoint(pwd: string): Uint8Array {
         return this.oprf.hashToPoint(pwd);
     }
 
-    public oprfH(x: Uint8Array, mask: Uint8Array): Uint8Array {
+    public oprfHUnmaskPoint(x: Uint8Array, mask: Uint8Array): Uint8Array {
         return this.oprf.unmaskPoint(x, mask);
     }
 
-    public oprfH1(x: Uint8Array): IMaskedData {
+    public oprfH1MaskPointWithRandom(x: Uint8Array): IMaskedData {
         return this.oprf.maskPoint(x);
     }
 
-    public oprfRaise(x: Uint8Array, y: Uint8Array): Uint8Array {
+    public oprfRaiseScalarMult(x: Uint8Array, y: Uint8Array): Uint8Array {
         return this.oprf.scalarMult(x, y);
     }
 
@@ -82,18 +82,21 @@ export class OpaqueNthPartyUtilV2 {
         );
     }
 
-    public oprfF(k: Uint8Array, x: Uint8Array): Uint8Array {
+    public oprfFUnmaskPointWithRandom(
+        k: Uint8Array,
+        x: Uint8Array
+    ): Uint8Array {
         if (!this.isValidPoint(x) || this.sodium.is_zero(x)) {
             x = this.oprf.hashToPoint(this.sodium.to_hex(x));
         }
 
-        const _H1_x_ = this.oprfH1(x);
+        const _H1_x_ = this.oprfH1MaskPointWithRandom(x);
         const H1_x = _H1_x_.point;
         const mask = _H1_x_.mask;
 
-        const H1_x_k = this.oprfRaise(H1_x, k);
+        const H1_x_k = this.oprfRaiseScalarMult(H1_x, k);
 
-        const unmasked = this.oprfH(H1_x_k, mask);
+        const unmasked = this.oprfHUnmaskPoint(H1_x_k, mask);
         return unmasked;
     }
 
@@ -101,12 +104,11 @@ export class OpaqueNthPartyUtilV2 {
         return new Uint8Array(32).fill(n);
     }
 
-    public KE(
+    public keyExchange(
         p: Uint8Array,
         x: Uint8Array,
         P: Uint8Array,
-        X: Uint8Array,
-        X1: Uint8Array
+        X: Uint8Array
     ): Uint8Array {
         const kx = this.oprf.scalarMult(X, x);
         const kp = this.oprf.scalarMult(P, p);
