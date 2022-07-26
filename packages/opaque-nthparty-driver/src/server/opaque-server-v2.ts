@@ -83,7 +83,7 @@ export class OpaqueNthPartyProtocolServerV2 extends OpaqueNthPartyProtocolV2 {
     ): Promise<ServerCredentialResponse> {
         if (!this.util.isValidPoint(alpha)) {
             throw new Error(
-                'Authentication failed. Alpha is not a group element.'
+                'Authentication failed @ C0. Alpha is not a group element.'
             );
         }
 

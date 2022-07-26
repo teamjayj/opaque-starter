@@ -41,15 +41,14 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
         const r = this.sodium.crypto_core_ristretto255_scalar_random();
         const xu = this.sodium.crypto_core_ristretto255_scalar_random();
 
-        this.set('r', r);
-        this.set('xu', xu);
-
         const hashedPassword = this.util.oprfKdf(password);
         const { point, mask } = this.util.oprfH1(hashedPassword);
 
         const alpha = this.util.oprfRaise(point, r);
         const Xu = this.sodium.crypto_scalarmult_ristretto255_base(xu);
 
+        this.set('r', r);
+        this.set('xu', xu);
         this.set('mask', mask);
         this.set('Xu', Xu);
 
@@ -66,19 +65,16 @@ export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
         envelope: Envelope,
         iterations?: number | undefined
     ) {
-        // get beta from server
         if (!this.util.isValidPoint(beta)) {
             throw new Error('Authentication failed @ C1');
         }
 
-        const rInverse = this.sodium.crypto_core_ristretto255_scalar_invert(
-            this.get('r')
-        );
+        const r = this.get('r');
+        const mask = this.get('mask');
+
+        const rInverse = this.sodium.crypto_core_ristretto255_scalar_invert(r);
         const rw = this.util.iteratedHash(
-            this.util.oprfH(
-                this.util.oprfRaise(beta, rInverse),
-                this.get('mask')
-            ),
+            this.util.oprfH(this.util.oprfRaise(beta, rInverse), mask),
             iterations
         );
 
