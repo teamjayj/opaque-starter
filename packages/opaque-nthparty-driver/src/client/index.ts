@@ -1,1 +1,1 @@
-export * from './opaque-client-v2';
+export * from './opaque-client';

@@ -1,12 +1,12 @@
 import sodium from 'libsodium-wrappers-sumo';
 import OPRF from 'oprf';
-import { OpaqueNthPartyUtilV2 } from './opaque-util-v2';
+import { OpaqueNthPartyUtil } from './opaque-util';
 import { Envelope } from './types';
 
 describe('Opaque util', () => {
     const plaintextPassword = 'password';
 
-    let util: OpaqueNthPartyUtilV2;
+    let util: OpaqueNthPartyUtil;
 
     const compareHexes = (a: Uint8Array, b: string) =>
         expect(a).toEqual(sodium.from_hex(b));
@@ -17,7 +17,7 @@ describe('Opaque util', () => {
         const oprf = new OPRF();
         await oprf.ready;
 
-        util = new OpaqueNthPartyUtilV2(sodium, oprf);
+        util = new OpaqueNthPartyUtil(sodium, oprf);
     });
 
     it('should convert cryptobox to string cryptobox', () => {

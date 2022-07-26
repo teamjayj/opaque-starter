@@ -1,1 +1,1 @@
-export * from './opaque-server-v2';
+export * from './opaque-server';

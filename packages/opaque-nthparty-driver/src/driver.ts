@@ -1,13 +1,13 @@
 import { PakeClientDriver, PakeServerDriver } from '@jayj/pake';
-import { OpaqueNthPartyUtilV2 } from './common/opaque-util-v2';
+import { OpaqueNthPartyUtil } from './common/opaque-util';
 import Sodium from 'libsodium-wrappers-sumo';
 import OPRF from 'oprf';
-import { OpaqueNthPartyProtocolClientV2 } from './client/opaque-client-v2';
+import { OpaqueNthPartyProtocolClient } from './client/opaque-client';
 
 export class OpaqueNthPartyDriver
     implements PakeClientDriver, PakeServerDriver
 {
-    private protocol: OpaqueNthPartyProtocolClientV2 | undefined;
+    private protocol: OpaqueNthPartyProtocolClient | undefined;
 
     constructor(private sodium: typeof Sodium) {}
 
@@ -15,8 +15,8 @@ export class OpaqueNthPartyDriver
         const oprf = new OPRF();
         await oprf.ready;
 
-        const utilV2 = new OpaqueNthPartyUtilV2(this.sodium, oprf);
-        this.protocol = new OpaqueNthPartyProtocolClientV2(this.sodium, utilV2);
+        const utilV2 = new OpaqueNthPartyUtil(this.sodium, oprf);
+        this.protocol = new OpaqueNthPartyProtocolClient(this.sodium, utilV2);
     }
 
     async registerAsClient(password: string, userId: string): Promise<void> {

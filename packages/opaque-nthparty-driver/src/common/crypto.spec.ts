@@ -1,11 +1,11 @@
 import sodium from 'libsodium-wrappers-sumo';
 import OPRF from 'oprf';
-import { OpaqueNthPartyUtilV2 } from './opaque-util-v2';
+import { OpaqueNthPartyUtil } from './opaque-util';
 
 describe('Crypto', () => {
     const plaintextPassword = 'password';
 
-    let util: OpaqueNthPartyUtilV2;
+    let util: OpaqueNthPartyUtil;
 
     beforeAll(async () => {
         await sodium.ready;
@@ -13,7 +13,7 @@ describe('Crypto', () => {
         const oprf = new OPRF();
         await oprf.ready;
 
-        util = new OpaqueNthPartyUtilV2(sodium, oprf);
+        util = new OpaqueNthPartyUtil(sodium, oprf);
     });
 
     describe('Client', () => {

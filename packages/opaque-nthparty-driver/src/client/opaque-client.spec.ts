@@ -1,16 +1,16 @@
 import Sodium from 'libsodium-wrappers-sumo';
-import { OpaqueNthPartyUtilV2 } from '../common/opaque-util-v2';
+import { OpaqueNthPartyUtil } from '../common/opaque-util';
 import OPRF from 'oprf';
-import { OpaqueNthPartyProtocolClientV2 } from './opaque-client-v2';
-import { OpaqueNthPartyProtocolServerV2 } from '../server';
+import { OpaqueNthPartyProtocolClient } from './opaque-client';
+import { OpaqueNthPartyProtocolServer } from '../server';
 
-describe('OPAQUE Client V2', () => {
+describe('OPAQUE Client', () => {
     let sodium: typeof Sodium;
 
-    let client: OpaqueNthPartyProtocolClientV2;
-    let server: OpaqueNthPartyProtocolServerV2;
-    let clientUtil: OpaqueNthPartyUtilV2;
-    let serverUtil: OpaqueNthPartyUtilV2;
+    let client: OpaqueNthPartyProtocolClient;
+    let server: OpaqueNthPartyProtocolServer;
+    let clientUtil: OpaqueNthPartyUtil;
+    let serverUtil: OpaqueNthPartyUtil;
 
     const userId = 'bob';
     const plaintextPassword = 'password';
@@ -22,11 +22,11 @@ describe('OPAQUE Client V2', () => {
         const oprf = new OPRF();
         await oprf.ready;
 
-        clientUtil = new OpaqueNthPartyUtilV2(sodium, oprf);
-        client = new OpaqueNthPartyProtocolClientV2(sodium, clientUtil);
+        clientUtil = new OpaqueNthPartyUtil(sodium, oprf);
+        client = new OpaqueNthPartyProtocolClient(sodium, clientUtil);
 
-        serverUtil = new OpaqueNthPartyUtilV2(sodium, oprf);
-        server = new OpaqueNthPartyProtocolServerV2(sodium, serverUtil);
+        serverUtil = new OpaqueNthPartyUtil(sodium, oprf);
+        server = new OpaqueNthPartyProtocolServer(sodium, serverUtil);
     });
 
     beforeEach(() => {

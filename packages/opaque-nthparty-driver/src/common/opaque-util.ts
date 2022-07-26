@@ -7,7 +7,7 @@ import Sodium, {
 import { IMaskedData } from 'oprf/build/oprf.slim';
 import { Envelope, StringEnvelope } from './types';
 
-export class OpaqueNthPartyUtilV2 {
+export class OpaqueNthPartyUtil {
     constructor(private sodium: typeof Sodium, private oprf: OPRF) {}
 
     public sodiumAeadEncrypt(

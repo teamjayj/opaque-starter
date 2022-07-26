@@ -1,12 +1,12 @@
-import { OpaqueNthPartyUtilV2 } from './opaque-util-v2';
+import { OpaqueNthPartyUtil } from './opaque-util';
 import Sodium from 'libsodium-wrappers-sumo';
 
-export class OpaqueNthPartyProtocolV2 {
+export class OpaqueNthPartyProtocol {
     protected store: Map<string, Uint8Array>;
 
     constructor(
         protected sodium: typeof Sodium,
-        protected util: OpaqueNthPartyUtilV2
+        protected util: OpaqueNthPartyUtil
     ) {
         this.store = new Map();
     }

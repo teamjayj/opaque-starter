@@ -1,9 +1,9 @@
 import sodium from 'libsodium-wrappers-sumo';
 import OPRF from 'oprf';
-import { OpaqueNthPartyProtocolV2, OpaqueNthPartyUtilV2 } from '.';
+import { OpaqueNthPartyProtocol, OpaqueNthPartyUtil } from '.';
 
-describe('Opaque Server', () => {
-    let opaqueCommon: OpaqueNthPartyProtocolV2;
+describe('Opaque common', () => {
+    let opaqueCommon: OpaqueNthPartyProtocol;
 
     beforeAll(async () => {
         await sodium.ready;
@@ -11,8 +11,8 @@ describe('Opaque Server', () => {
         const oprf = new OPRF();
         await oprf.ready;
 
-        const util = new OpaqueNthPartyUtilV2(sodium, oprf);
-        opaqueCommon = new OpaqueNthPartyProtocolV2(sodium, util);
+        const util = new OpaqueNthPartyUtil(sodium, oprf);
+        opaqueCommon = new OpaqueNthPartyProtocol(sodium, util);
     });
 
     afterEach(() => {

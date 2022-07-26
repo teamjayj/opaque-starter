@@ -6,18 +6,18 @@ import {
     OperationId,
     UserId,
 } from '../common/types';
-import { OpaqueNthPartyUtilV2 } from '../common/opaque-util-v2';
+import { OpaqueNthPartyUtil } from '../common/opaque-util';
 import Sodium from 'libsodium-wrappers-sumo';
-import { OpaqueNthPartyProtocolV2 } from '../common/opaque-v2';
+import { OpaqueNthPartyProtocol } from '../common/opaque';
 
-export class OpaqueNthPartyProtocolClientV2 extends OpaqueNthPartyProtocolV2 {
-    constructor(sodium: typeof Sodium, util: OpaqueNthPartyUtilV2) {
+export class OpaqueNthPartyProtocolClient extends OpaqueNthPartyProtocol {
+    constructor(sodium: typeof Sodium, util: OpaqueNthPartyUtil) {
         super(sodium, util);
     }
 
     /**
      * Creates client registration request
-     *
+     *s
      * @param password - plaintext password
      * @param userId - user identifier such as username
      * @param opId - operation ID
