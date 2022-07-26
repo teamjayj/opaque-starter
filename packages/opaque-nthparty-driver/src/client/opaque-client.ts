@@ -3,12 +3,12 @@ import {
     ClientKeyExchangeRequest,
     ClientRegistrationRequest,
     Envelope,
+    OpaqueNthPartyProtocol,
+    OpaqueNthPartyUtil,
     OperationId,
     UserId,
-} from '../common/types';
-import { OpaqueNthPartyUtil } from '../common/opaque-util';
+} from '../common';
 import Sodium from 'libsodium-wrappers-sumo';
-import { OpaqueNthPartyProtocol } from '../common/opaque';
 
 export class OpaqueNthPartyProtocolClient extends OpaqueNthPartyProtocol {
     constructor(sodium: typeof Sodium, util: OpaqueNthPartyUtil) {

@@ -5,7 +5,7 @@ import Sodium, {
     StringCryptoBox,
 } from 'libsodium-wrappers-sumo';
 import { IMaskedData } from 'oprf/build/oprf.slim';
-import { Envelope, StringEnvelope } from './types';
+import { Envelope, StringEnvelope } from '.';
 
 export class OpaqueNthPartyUtil {
     constructor(private sodium: typeof Sodium, private oprf: OPRF) {}

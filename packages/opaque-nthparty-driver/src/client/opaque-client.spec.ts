@@ -1,8 +1,8 @@
 import Sodium from 'libsodium-wrappers-sumo';
-import { OpaqueNthPartyUtil } from '../common/opaque-util';
 import OPRF from 'oprf';
-import { OpaqueNthPartyProtocolClient } from './opaque-client';
+import { OpaqueNthPartyProtocolClient } from '.';
 import { OpaqueNthPartyProtocolServer } from '../server';
+import { OpaqueNthPartyUtil } from '../common';
 
 describe('OPAQUE Client', () => {
     let sodium: typeof Sodium;

@@ -1,7 +1,11 @@
-import { Pepper, ServerCredentialResponse, UserRecord } from '../common/types';
-import { OpaqueNthPartyUtil } from '../common/opaque-util';
+import {
+    OpaqueNthPartyProtocol,
+    OpaqueNthPartyUtil,
+    Pepper,
+    ServerCredentialResponse,
+    UserRecord,
+} from '../common';
 import Sodium from 'libsodium-wrappers-sumo';
-import { OpaqueNthPartyProtocol } from '../common/opaque';
 
 export class OpaqueNthPartyProtocolServer extends OpaqueNthPartyProtocol {
     constructor(sodium: typeof Sodium, util: OpaqueNthPartyUtil) {

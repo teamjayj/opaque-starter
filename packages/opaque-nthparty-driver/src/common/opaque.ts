@@ -1,4 +1,4 @@
-import { OpaqueNthPartyUtil } from './opaque-util';
+import { OpaqueNthPartyUtil } from '.';
 import Sodium from 'libsodium-wrappers-sumo';
 
 export class OpaqueNthPartyProtocol {

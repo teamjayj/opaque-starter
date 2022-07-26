@@ -1,7 +1,6 @@
 import sodium from 'libsodium-wrappers-sumo';
 import OPRF from 'oprf';
-import { OpaqueNthPartyUtil } from './opaque-util';
-import { Envelope } from './types';
+import { Envelope, OpaqueNthPartyUtil } from '.';
 
 describe('Opaque util', () => {
     const plaintextPassword = 'password';
