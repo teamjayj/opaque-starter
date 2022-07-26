@@ -12,6 +12,10 @@ export class OpaqueNthPartyProtocolV2 {
     }
 
     protected set(key: string, value: Uint8Array): void {
+        if (this.store.has(key)) {
+            throw new Error(`${key} is already set in store`);
+        }
+
         this.store.set(key, value);
     }
 
