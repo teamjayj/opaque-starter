@@ -1,28 +1,35 @@
-import sodium from 'libsodium-wrappers-sumo';
+import Sodium from 'libsodium-wrappers-sumo';
 import { OpaqueNthPartyUtilV2 } from '../common/opaque-util-v2';
 import OPRF from 'oprf';
 import { OpaqueNthPartyProtocolClientV2 } from './opaque-client-v2';
 import { OpaqueNthPartyProtocolServerV2 } from '../server';
-import { hexStringToUint8Array } from '../common/hex-util';
 
 describe('OPAQUE Client V2', () => {
+    let sodium: typeof Sodium;
+
     let client: OpaqueNthPartyProtocolClientV2;
     let server: OpaqueNthPartyProtocolServerV2;
-    let util: OpaqueNthPartyUtilV2;
+    let clientUtil: OpaqueNthPartyUtilV2;
+    let serverUtil: OpaqueNthPartyUtilV2;
 
     const userId = 'bob';
     const plaintextPassword = 'password';
 
-    beforeEach(async () => {
+    beforeAll(async () => {
+        await Sodium.ready;
+        sodium = Sodium;
+
         const oprf = new OPRF();
         await oprf.ready;
 
-        util = new OpaqueNthPartyUtilV2(sodium, oprf);
-        client = new OpaqueNthPartyProtocolClientV2(sodium, util);
-        server = new OpaqueNthPartyProtocolServerV2(sodium, util);
+        clientUtil = new OpaqueNthPartyUtilV2(sodium, oprf);
+        client = new OpaqueNthPartyProtocolClientV2(sodium, clientUtil);
+
+        serverUtil = new OpaqueNthPartyUtilV2(sodium, oprf);
+        server = new OpaqueNthPartyProtocolServerV2(sodium, serverUtil);
     });
 
-    afterEach(() => {
+    beforeEach(() => {
         client.clearStore();
         server.clearStore();
     });
@@ -47,7 +54,7 @@ describe('OPAQUE Client V2', () => {
             plaintextPassword,
             userId
         );
-        const hashedPassword = hexStringToUint8Array(request.hashedPassword);
+        const hashedPassword = sodium.from_hex(request.hashedPassword);
         const userRecord = await server.serverRegister(userId, hashedPassword);
 
         expect(userRecord).toBeTruthy();
@@ -74,7 +81,7 @@ describe('OPAQUE Client V2', () => {
             plaintextPassword,
             userId
         );
-        const hashedPassword = hexStringToUint8Array(
+        const hashedPassword = sodium.from_hex(
             registrationRequest.hashedPassword
         );
 
@@ -91,8 +98,8 @@ describe('OPAQUE Client V2', () => {
         // 2: Client -> Server
 
         const credentialResponse = await server.serverBeginAuthenticate(
-            hexStringToUint8Array(credentialRequest.alpha),
-            hexStringToUint8Array(credentialRequest.Xu),
+            sodium.from_hex(credentialRequest.alpha),
+            sodium.from_hex(credentialRequest.Xu),
             userRecord.pepper
         );
 
@@ -113,7 +120,7 @@ describe('OPAQUE Client V2', () => {
             plaintextPassword,
             userId
         );
-        const hashedPassword = hexStringToUint8Array(
+        const hashedPassword = sodium.from_hex(
             registrationRequest.hashedPassword
         );
 
@@ -130,19 +137,21 @@ describe('OPAQUE Client V2', () => {
         // 2: Client -> Server
 
         const credentialResponse = await server.serverBeginAuthenticate(
-            hexStringToUint8Array(credentialRequest.alpha),
-            hexStringToUint8Array(credentialRequest.Xu),
+            sodium.from_hex(credentialRequest.alpha),
+            sodium.from_hex(credentialRequest.Xu),
             userRecord.pepper
         );
 
         // 2: Client <- Server (credential response or fail)
 
         const request = await client.clientKeyExchangeAuthenticate(
-            hexStringToUint8Array(credentialResponse.beta),
-            hexStringToUint8Array(credentialResponse.Xs),
-            hexStringToUint8Array(credentialResponse.As),
-            util.stringEnvelopeToEnvelope(credentialResponse.envelope)
+            sodium.from_hex(credentialResponse.beta),
+            sodium.from_hex(credentialResponse.Xs),
+            sodium.from_hex(credentialResponse.As),
+            clientUtil.stringEnvelopeToEnvelope(credentialResponse.envelope)
         );
+
+        // 3: Client -> Server
 
         expect(request).toBeTruthy();
     });
