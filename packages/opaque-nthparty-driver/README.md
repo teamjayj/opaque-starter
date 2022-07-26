@@ -1,10 +1,10 @@
 # opaque-nthparty-driver
 
-A rewritten implementation of [`@nthparty/opaque`](https://github.com/nthparty/opaque) in TypeScript with updated types and dependencies.
+A rewritten implementation of [`@nthparty/opaque`](https://github.com/nthparty/opaque) (version `0.3.0`) in TypeScript with updated types and dependencies.
 
 ## Details
 
-This implementation references the [`draft-krawczyk-cfrg-opaque-06`](https://datatracker.ietf.org/doc/html/draft-krawczyk-cfrg-opaque-06) specification. In the
+This implementation references the [`draft-krawczyk-cfrg-opaque-06`](https://datatracker.ietf.org/doc/html/draft-krawczyk-cfrg-opaque-06) specification. In the JavaScript implementation, the following are bserved:
 
 -   It uses [`ristretto255`](https://ristretto.group/), provided by `libsodium-wrappers-sumo`, for constructing prime-order groups.
 -   It uses `SHA512-HMAC` on top of `ChaCha20Poly1305` for encryption and decryption.
