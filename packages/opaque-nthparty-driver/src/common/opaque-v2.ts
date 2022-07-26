@@ -11,7 +11,7 @@ export class OpaqueNthPartyProtocolV2 {
         this.store = new Map();
     }
 
-    protected set(key: string, value: Uint8Array): void {
+    public set(key: string, value: Uint8Array): void {
         if (this.store.has(key)) {
             throw new Error(`${key} is already set in store`);
         }
