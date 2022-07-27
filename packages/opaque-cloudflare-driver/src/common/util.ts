@@ -10,4 +10,8 @@ export class OpaqueCloudflareUtil {
     public async generateKeyPair(): Promise<AKEExportKeyPair> {
         return this.config.ake.generateAuthKeyPair();
     }
+
+    public toHexString(data: number[]): string {
+        return Buffer.from(data).toString('hex');
+    }
 }
