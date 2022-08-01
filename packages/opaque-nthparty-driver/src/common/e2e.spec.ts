@@ -1,10 +1,10 @@
 import Sodium from 'libsodium-wrappers-sumo';
 import OPRF from 'oprf';
-import { OpaqueNthPartyProtocolClient } from '.';
+import { OpaqueNthPartyProtocolClient } from '../client';
 import { OpaqueNthPartyProtocolServer } from '../server';
-import { OpaqueNthPartyUtil } from '../common';
+import { OpaqueNthPartyUtil } from '.';
 
-describe('OPAQUE Client', () => {
+describe('End-to-end driver test', () => {
     let sodium: typeof Sodium;
 
     let client: OpaqueNthPartyProtocolClient;
