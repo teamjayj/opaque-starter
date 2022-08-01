@@ -8,7 +8,7 @@ import {
     RegistrationRequest,
 } from '@cloudflare/opaque-ts';
 import {
-    bufferToHex,
+    bufferToHexString,
     hexStringToArray,
     PakeServerDriver,
     SerialData,
@@ -50,7 +50,7 @@ export class OpaqueCloudflareServerDriver {
             throw new Error(`Server failed to registerInit: ${response}`);
         }
 
-        return bufferToHex(response.serialize());
+        return bufferToHexString(response.serialize());
     }
 
     public async registerFinish(
@@ -68,6 +68,6 @@ export class OpaqueCloudflareServerDriver {
         );
 
         const credentialFile = new CredentialFile(credentialId, record, userId);
-        return bufferToHex(credentialFile.serialize());
+        return bufferToHexString(credentialFile.serialize());
     }
 }

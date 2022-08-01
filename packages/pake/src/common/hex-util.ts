@@ -51,7 +51,7 @@ export const hexStringToUint8Array = (str: HexString): Uint8Array =>
 export const hexStringToArray = (str: HexString): number[] =>
     Array.from(hexStringToUint8Array(str));
 
-export const bufferToHex = (buffer: number[]): HexString => {
+export const bufferToHexString = (buffer: number[]): HexString => {
     const h = '0123456789abcdef';
     let hexString = '';
     new Uint8Array(buffer).forEach((v) => {
