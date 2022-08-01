@@ -1,1 +1,4 @@
-export type SerialData = number[] | string;
+/**
+ * Hexadecimal string
+ */
+export type SerialData = string;
