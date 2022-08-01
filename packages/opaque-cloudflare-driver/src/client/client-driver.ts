@@ -4,10 +4,13 @@ import {
     OpaqueClient,
     OpaqueID,
     RegistrationResponse,
-    RegistrationRecord,
 } from '@cloudflare/opaque-ts';
-import { Serializable } from '@cloudflare/opaque-ts/lib/src/messages';
-import { PakeClientDriver } from '@jayj/pake';
+import {
+    bufferToHex,
+    hexStringToArray,
+    PakeClientDriver,
+    SerialData,
+} from '@jayj/pake';
 
 export class OpaqueCloudflareClientDriver {
     private config: Readonly<Config>;
@@ -23,37 +26,41 @@ export class OpaqueCloudflareClientDriver {
     public async registerInit(
         password: string,
         userId: string
-    ): Promise<Serializable> {
+    ): Promise<SerialData> {
         const request = await this.client.registerInit(password);
 
         if (request instanceof Error) {
             throw new Error(`Client failed to registerInit: ${request}`);
         }
 
-        return request;
+        return bufferToHex(request.serialize());
     }
 
     public async registerFinish(
-        data: Uint8Array,
-        serverPublicKey: Uint8Array,
-        serverId: string,
-        userId: string
-    ) {
-        const response = new RegistrationResponse(
+        responseData: SerialData,
+        userId: string,
+        serverId: string
+    ): Promise<SerialData> {
+        const response = RegistrationResponse.deserialize(
             this.config,
-            data,
-            serverPublicKey
+            hexStringToArray(responseData)
         );
 
-        const record = await this.client.registerFinish(
+        const registrationResult = await this.client.registerFinish(
             response,
             serverId,
             userId
         );
 
-        if (record instanceof Error) {
-            throw new Error(`Client failed to registerFinish: ${record}`);
+        if (registrationResult instanceof Error) {
+            throw new Error(
+                `Client failed to registerFinish: ${registrationResult}`
+            );
         }
+
+        const { record } = registrationResult;
+
+        return bufferToHex(record.serialize());
     }
 
     public async authenticateAsClient(

@@ -2,13 +2,17 @@ import {
     Config,
     CredentialFile,
     getOpaqueConfig,
-    OpaqueClient,
     OpaqueID,
     OpaqueServer,
     RegistrationRecord,
     RegistrationRequest,
 } from '@cloudflare/opaque-ts';
-import { PakeServerDriver } from '@jayj/pake';
+import {
+    bufferToHex,
+    hexStringToArray,
+    PakeServerDriver,
+    SerialData,
+} from '@jayj/pake';
 import { OpaqueCloudflareUtil } from '../common';
 
 export class OpaqueCloudflareServerDriver {
@@ -27,33 +31,43 @@ export class OpaqueCloudflareServerDriver {
         this.server = new OpaqueServer(this.config, oprfSeed, keyPair);
     }
 
-    public async registerInit(data: number[], credentialId: string) {
+    public async registerInit(
+        requestData: SerialData,
+        credentialId: string
+    ): Promise<SerialData> {
         if (this.server == null) {
             throw new Error('Server undefined');
         }
 
-        const request = RegistrationRequest.deserialize(this.config, data);
+        const request = RegistrationRequest.deserialize(
+            this.config,
+            hexStringToArray(requestData)
+        );
 
         const response = await this.server.registerInit(request, credentialId);
 
         if (response instanceof Error) {
             throw new Error(`Server failed to registerInit: ${response}`);
         }
+
+        return bufferToHex(response.serialize());
     }
 
     public async registerFinish(
-        data: number[],
+        recordData: SerialData,
         credentialId: string,
         userId: string
-    ) {
+    ): Promise<SerialData> {
         if (this.server == null) {
             throw new Error('Server undefined');
         }
 
-        const record = RegistrationRecord.deserialize(this.config, data);
+        const record = RegistrationRecord.deserialize(
+            this.config,
+            hexStringToArray(recordData)
+        );
 
         const credentialFile = new CredentialFile(credentialId, record, userId);
-
-        return credentialFile;
+        return bufferToHex(credentialFile.serialize());
     }
 }
