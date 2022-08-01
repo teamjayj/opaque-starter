@@ -45,3 +45,15 @@ const fromHex = (hexString: string): Uint8Array => {
  */
 export const hexStringToUint8Array = (str: string): Uint8Array =>
     Uint8Array.from(fromHex(str));
+
+export const hexStringToArray = (str: string): number[] =>
+    Array.from(hexStringToUint8Array(str));
+
+export const bufferToHex = (buffer: number[]): string => {
+    const h = '0123456789abcdef';
+    let s = '';
+    new Uint8Array(buffer).forEach((v) => {
+        s += h[v >> 4] + h[v & 15];
+    });
+    return s;
+};
