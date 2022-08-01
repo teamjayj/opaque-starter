@@ -1,3 +1,5 @@
+import { HexString } from './types';
+
 const MAP_HEX: Record<string | number, number> = {
     0: 0,
     1: 1,
@@ -43,17 +45,17 @@ const fromHex = (hexString: string): Uint8Array => {
  * @param str - hex string
  * @returns - Uint8Array representation
  */
-export const hexStringToUint8Array = (str: string): Uint8Array =>
+export const hexStringToUint8Array = (str: HexString): Uint8Array =>
     Uint8Array.from(fromHex(str));
 
-export const hexStringToArray = (str: string): number[] =>
+export const hexStringToArray = (str: HexString): number[] =>
     Array.from(hexStringToUint8Array(str));
 
-export const bufferToHex = (buffer: number[]): string => {
+export const bufferToHex = (buffer: number[]): HexString => {
     const h = '0123456789abcdef';
-    let s = '';
+    let hexString = '';
     new Uint8Array(buffer).forEach((v) => {
-        s += h[v >> 4] + h[v & 15];
+        hexString += h[v >> 4] + h[v & 15];
     });
-    return s;
+    return hexString as HexString;
 };
