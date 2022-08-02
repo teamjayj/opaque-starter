@@ -1,7 +1,10 @@
 import {
     Config,
     CredentialFile,
+    ExpectedAuthResult,
     getOpaqueConfig,
+    KE1,
+    KE3,
     OpaqueID,
     OpaqueServer,
     RegistrationRecord,
@@ -69,5 +72,76 @@ export class OpaqueCloudflareServerDriver {
 
         const credentialFile = new CredentialFile(credentialId, record, userId);
         return bufferToHexString(credentialFile.serialize());
+    }
+
+    public async authInit(
+        clientAuthRequestData: SerialData,
+        clientCredentialFileData: SerialData
+    ): Promise<{ ke2: SerialData; expected: SerialData }> {
+        if (this.server == null) {
+            throw new Error('Server undefined');
+        }
+
+        const ke1 = KE1.deserialize(
+            this.config,
+            hexStringToArray(clientAuthRequestData)
+        );
+
+        const credentialFile = CredentialFile.deserialize(
+            this.config,
+            hexStringToArray(clientCredentialFileData)
+        );
+
+        const response = await this.server.authInit(
+            ke1,
+            credentialFile.record,
+            credentialFile.credential_identifier,
+            credentialFile.client_identity
+        );
+
+        if (response instanceof Error) {
+            throw new Error(`Server failed to authInit: ${response}`);
+        }
+
+        const { ke2, expected } = response;
+
+        return {
+            ke2: bufferToHexString(ke2.serialize()),
+            expected: bufferToHexString(expected.serialize()),
+        };
+    }
+
+    public async authFinish(
+        clientRequestData: SerialData,
+        expectedAuthResultData: SerialData
+    ): Promise<SerialData> {
+        if (this.server == null) {
+            throw new Error('Server undefined');
+        }
+
+        const ke3 = KE3.deserialize(
+            this.config,
+            hexStringToArray(clientRequestData)
+        );
+
+        const expectedAuthResult = ExpectedAuthResult.deserialize(
+            this.config,
+            hexStringToArray(expectedAuthResultData)
+        );
+
+        const authResult = await this.server.authFinish(
+            ke3,
+            expectedAuthResult
+        );
+
+        if (authResult instanceof Error) {
+            throw new Error(
+                `Server failed to authenticate user: ${authResult}`
+            );
+        }
+
+        const { session_key } = authResult;
+
+        return bufferToHexString(session_key);
     }
 }

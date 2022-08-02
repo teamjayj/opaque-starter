@@ -1,6 +1,7 @@
 import {
     Config,
     getOpaqueConfig,
+    KE2,
     OpaqueClient,
     OpaqueID,
     RegistrationResponse,
@@ -63,10 +64,34 @@ export class OpaqueCloudflareClientDriver {
         return bufferToHexString(record.serialize());
     }
 
-    public async authenticateAsClient(
-        password: string,
-        userId: string
-    ): Promise<void> {}
+    public async authInit(password: string): Promise<SerialData> {
+        const request = await this.client.authInit(password);
+
+        if (request instanceof Error) {
+            throw new Error(`Client failed to authInit: ${request}`);
+        }
+
+        return bufferToHexString(request.serialize());
+    }
+
+    public async authFinish(
+        serverResponseData: SerialData
+    ): Promise<SerialData> {
+        const ke2 = KE2.deserialize(
+            this.config,
+            hexStringToArray(serverResponseData)
+        );
+
+        const authResult = await this.client.authFinish(ke2);
+
+        if (authResult instanceof Error) {
+            throw new Error(`Client failed to authFinish: ${authResult}`);
+        }
+
+        const { ke3 } = authResult;
+
+        return bufferToHexString(ke3.serialize());
+    }
 
     public getConfig(): Readonly<Config> {
         return this.config;
