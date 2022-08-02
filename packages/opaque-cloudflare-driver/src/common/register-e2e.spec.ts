@@ -9,7 +9,7 @@ import { OpaqueCloudflareClientDriver } from '../client';
 import { hexStringToArray } from '@jayj/pake';
 
 describe.each([OpaqueID.OPAQUE_P256])(
-    'End-to-end driver test',
+    'Registration end-to-end driver test',
     (opaqueID: OpaqueID) => {
         describe(OpaqueID[opaqueID], () => {
             let config: Readonly<Config>;
