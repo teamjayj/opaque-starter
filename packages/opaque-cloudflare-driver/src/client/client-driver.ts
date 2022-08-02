@@ -78,7 +78,7 @@ export class OpaqueCloudflareClientDriver {
         serverResponseData: SerialData,
         userId: string,
         serverId: string
-    ): Promise<SerialData> {
+    ): Promise<{ clientRequest: SerialData; sessionKey: SerialData }> {
         const ke2 = KE2.deserialize(
             this.config,
             hexStringToArray(serverResponseData)
@@ -90,9 +90,12 @@ export class OpaqueCloudflareClientDriver {
             throw new Error(`Client failed to authFinish: ${authResult}`);
         }
 
-        const { ke3 } = authResult;
+        const { ke3, session_key } = authResult;
 
-        return bufferToHexString(ke3.serialize());
+        return {
+            clientRequest: bufferToHexString(ke3.serialize()),
+            sessionKey: bufferToHexString(session_key),
+        };
     }
 
     public getConfig(): Readonly<Config> {
