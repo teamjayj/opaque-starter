@@ -1,3 +1,5 @@
+import { SerialData, ServerAuthInitResponse } from '../common';
+
 export interface PakeServerDriver {
     /**
      * Initializes the driver.
@@ -7,10 +9,24 @@ export interface PakeServerDriver {
     /**
      * Invokes the password registration step as a server.
      */
-    registerAsServer(): Promise<void>;
+    registerInit(
+        clientRequestData: SerialData,
+        credentialId: string
+    ): Promise<SerialData>;
 
-    /**
-     * Invokes the password authentication step as a server.
-     */
-    authenticateAsServer(): Promise<void>;
+    registerFinish(
+        registrationRecordData: SerialData,
+        credentialId: string,
+        userId: string
+    ): Promise<SerialData>;
+
+    authInit(
+        clientRequestData: SerialData,
+        clientCredentialFileData: SerialData
+    ): Promise<ServerAuthInitResponse>;
+
+    authFinish(
+        clientRequestData: SerialData,
+        expectedAuthResultData: SerialData
+    ): Promise<SerialData>;
 }
