@@ -8,6 +8,7 @@ import {
 } from '@cloudflare/opaque-ts';
 import {
     bufferToHexString,
+    ClientAuthFinishResponse,
     hexStringToArray,
     PakeClientDriver,
     SerialData,
@@ -78,7 +79,7 @@ export class OpaqueCloudflareClientDriver {
         serverResponseData: SerialData,
         userId: string,
         serverId: string
-    ): Promise<{ clientRequest: SerialData; sessionKey: SerialData }> {
+    ): Promise<ClientAuthFinishResponse> {
         const ke2 = KE2.deserialize(
             this.config,
             hexStringToArray(serverResponseData)

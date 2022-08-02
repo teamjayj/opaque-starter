@@ -15,6 +15,7 @@ import {
     hexStringToArray,
     PakeServerDriver,
     SerialData,
+    ServerAuthInitResponse,
 } from '@jayj/pake';
 import { OpaqueCloudflareUtil } from '../common';
 
@@ -82,7 +83,7 @@ export class OpaqueCloudflareServerDriver {
     public async authInit(
         clientAuthRequestData: SerialData,
         clientCredentialFileData: SerialData
-    ): Promise<{ serverResponse: SerialData; expectedAuthResult: SerialData }> {
+    ): Promise<ServerAuthInitResponse> {
         if (this.server == null) {
             throw new Error('Server undefined');
         }
