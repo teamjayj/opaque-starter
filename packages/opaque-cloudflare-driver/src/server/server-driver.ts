@@ -23,7 +23,7 @@ export class OpaqueCloudflareServerDriver {
     private util: OpaqueCloudflareUtil;
     private server: OpaqueServer | undefined;
 
-    constructor(opaqueId: OpaqueID) {
+    constructor(private serverId: string, opaqueId: OpaqueID) {
         this.config = getOpaqueConfig(opaqueId);
         this.util = new OpaqueCloudflareUtil(this.config);
     }
@@ -31,7 +31,12 @@ export class OpaqueCloudflareServerDriver {
     async initialize(): Promise<void> {
         const oprfSeed = this.util.getRandomOprfSeed();
         const keyPair = await this.util.generateKeyPair();
-        this.server = new OpaqueServer(this.config, oprfSeed, keyPair);
+        this.server = new OpaqueServer(
+            this.config,
+            oprfSeed,
+            keyPair,
+            this.serverId
+        );
     }
 
     public async registerInit(
