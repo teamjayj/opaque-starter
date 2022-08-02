@@ -75,14 +75,16 @@ export class OpaqueCloudflareClientDriver {
     }
 
     public async authFinish(
-        serverResponseData: SerialData
+        serverResponseData: SerialData,
+        userId: string,
+        serverId: string
     ): Promise<SerialData> {
         const ke2 = KE2.deserialize(
             this.config,
             hexStringToArray(serverResponseData)
         );
 
-        const authResult = await this.client.authFinish(ke2);
+        const authResult = await this.client.authFinish(ke2, serverId, userId);
 
         if (authResult instanceof Error) {
             throw new Error(`Client failed to authFinish: ${authResult}`);
