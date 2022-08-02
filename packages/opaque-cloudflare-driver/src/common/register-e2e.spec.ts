@@ -24,7 +24,7 @@ describe.each([OpaqueID.OPAQUE_P256])(
             beforeEach(async () => {
                 config = getOpaqueConfig(opaqueID);
                 client = new OpaqueCloudflareClientDriver(opaqueID);
-                server = new OpaqueCloudflareServerDriver(opaqueID);
+                server = new OpaqueCloudflareServerDriver(serverId, opaqueID);
 
                 await client.initialize();
                 await server.initialize();
