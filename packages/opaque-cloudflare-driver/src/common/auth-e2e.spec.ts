@@ -95,6 +95,33 @@ describe.each([OpaqueID.OPAQUE_P256])(
 
                 expect(authFinish).toBeTruthy();
             });
+
+            it('should finish auth on server-side', async () => {
+                const authRequest = await client.authInit(plaintextPassword);
+
+                // C1: Client --> Server
+
+                const { expectedAuthResult, serverResponse: authResponse } =
+                    await server.authInit(authRequest, credentialFile);
+
+                // C1: Client <-- Server
+
+                const {
+                    sessionKey: clientSessionKey,
+                    clientRequest: authFinishRequest,
+                } = await client.authFinish(authResponse, userId, serverId);
+
+                // C2: Client --> Server
+
+                const serverSessionKey = await server.authFinish(
+                    authFinishRequest,
+                    expectedAuthResult
+                );
+
+                // C2: Client <-- Server: Auth Success
+
+                expect(serverSessionKey).toStrictEqual(clientSessionKey);
+            });
         });
     }
 );
