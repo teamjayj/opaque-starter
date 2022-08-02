@@ -77,7 +77,7 @@ export class OpaqueCloudflareServerDriver {
     public async authInit(
         clientAuthRequestData: SerialData,
         clientCredentialFileData: SerialData
-    ): Promise<{ ke2: SerialData; expected: SerialData }> {
+    ): Promise<{ serverResponse: SerialData; expectedAuthResult: SerialData }> {
         if (this.server == null) {
             throw new Error('Server undefined');
         }
@@ -106,8 +106,8 @@ export class OpaqueCloudflareServerDriver {
         const { ke2, expected } = response;
 
         return {
-            ke2: bufferToHexString(ke2.serialize()),
-            expected: bufferToHexString(expected.serialize()),
+            serverResponse: bufferToHexString(ke2.serialize()),
+            expectedAuthResult: bufferToHexString(expected.serialize()),
         };
     }
 
