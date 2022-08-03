@@ -1,5 +1,6 @@
 import { Application, Request, Response } from 'express';
 import {
+    CredentialStore,
     hexStringToUint8Array,
     PakeServerDriver,
     uint8ArrayToHexString,
@@ -12,7 +13,11 @@ export type RouteParams = {
 };
 
 export class OpaqueExpress {
-    constructor(private app: Application, private driver: PakeServerDriver) {
+    constructor(
+        private app: Application,
+        private driver: PakeServerDriver,
+        private credentialStore: CredentialStore
+    ) {
         this.createRoutes({
             registerInitEndpoint: '/registerInit',
             registerFinishEndpoint: '/registerFinish',
@@ -52,6 +57,8 @@ export class OpaqueExpress {
                     credentialId,
                     userId
                 );
+
+                await this.credentialStore.store(credentialFile);
 
                 return res.json({
                     success: true,
