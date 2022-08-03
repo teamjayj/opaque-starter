@@ -6,9 +6,9 @@ import {
     OpaqueID,
     RegistrationResponse,
 } from '@cloudflare/opaque-ts';
-import { ClientAuthFinishResponse } from '@jayj/pake';
+import { ClientAuthFinishResponse, PakeClientDriver } from '@jayj/pake';
 
-export class OpaqueCloudflareClientDriver {
+export class OpaqueCloudflareClientDriver implements PakeClientDriver {
     private config: Readonly<Config>;
     private client: OpaqueClient;
 
@@ -33,13 +33,13 @@ export class OpaqueCloudflareClientDriver {
     }
 
     public async registerFinish(
-        responseData: Uint8Array,
+        serverResponseData: Uint8Array,
         userId: string,
         serverId: string
     ): Promise<Uint8Array> {
         const response = RegistrationResponse.deserialize(
             this.config,
-            Array.from(responseData)
+            Array.from(serverResponseData)
         );
 
         const registrationResult = await this.client.registerFinish(

@@ -13,7 +13,7 @@ import {
 import { PakeServerDriver, ServerAuthInitResponse } from '@jayj/pake';
 import { OpaqueCloudflareUtil } from '../common';
 
-export class OpaqueCloudflareServerDriver {
+export class OpaqueCloudflareServerDriver implements PakeServerDriver {
     private config: Readonly<Config>;
     private util: OpaqueCloudflareUtil;
     private server: OpaqueServer | undefined;
@@ -35,7 +35,7 @@ export class OpaqueCloudflareServerDriver {
     }
 
     public async registerInit(
-        requestData: Uint8Array,
+        clientRequestData: Uint8Array,
         credentialId: string
     ): Promise<Uint8Array> {
         if (this.server == null) {
@@ -44,7 +44,7 @@ export class OpaqueCloudflareServerDriver {
 
         const request = RegistrationRequest.deserialize(
             this.config,
-            Array.from(requestData)
+            Array.from(clientRequestData)
         );
 
         const response = await this.server.registerInit(request, credentialId);
@@ -57,7 +57,7 @@ export class OpaqueCloudflareServerDriver {
     }
 
     public async registerFinish(
-        recordData: Uint8Array,
+        registrationRecordData: Uint8Array,
         credentialId: string,
         userId: string
     ): Promise<Uint8Array> {
@@ -67,7 +67,7 @@ export class OpaqueCloudflareServerDriver {
 
         const record = RegistrationRecord.deserialize(
             this.config,
-            Array.from(recordData)
+            Array.from(registrationRecordData)
         );
 
         const credentialFile = new CredentialFile(credentialId, record, userId);
@@ -75,17 +75,14 @@ export class OpaqueCloudflareServerDriver {
     }
 
     public async authInit(
-        clientAuthRequestData: Uint8Array,
+        clientRequestData: Uint8Array,
         clientCredentialFileData: Uint8Array
     ): Promise<ServerAuthInitResponse> {
         if (this.server == null) {
             throw new Error('Server undefined');
         }
 
-        const ke1 = KE1.deserialize(
-            this.config,
-            Array.from(clientAuthRequestData)
-        );
+        const ke1 = KE1.deserialize(this.config, Array.from(clientRequestData));
 
         const credentialFile = CredentialFile.deserialize(
             this.config,
