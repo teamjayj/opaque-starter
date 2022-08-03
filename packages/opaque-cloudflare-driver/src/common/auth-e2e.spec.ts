@@ -25,8 +25,7 @@ describe.each([OpaqueID.OPAQUE_P256])(
                 await server.initialize();
 
                 const registrationRequest = await client.registerInit(
-                    plaintextPassword,
-                    userId
+                    plaintextPassword
                 );
 
                 // C1: Client --> Server: Registration Request

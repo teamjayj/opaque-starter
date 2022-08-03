@@ -31,8 +31,7 @@ describe.each([OpaqueID.OPAQUE_P256])(
 
             it('should initialize client register', async () => {
                 const registrationRequest = await client.registerInit(
-                    plaintextPassword,
-                    userId
+                    plaintextPassword
                 );
 
                 expect(registrationRequest).toBeTruthy();
@@ -40,8 +39,7 @@ describe.each([OpaqueID.OPAQUE_P256])(
 
             it('should accept registration request from client', async () => {
                 const registrationRequest = await client.registerInit(
-                    plaintextPassword,
-                    userId
+                    plaintextPassword
                 );
 
                 // C1: Client --> Server
@@ -56,8 +54,7 @@ describe.each([OpaqueID.OPAQUE_P256])(
 
             it('should finish registration on client-side and create record', async () => {
                 const registrationRequest = await client.registerInit(
-                    plaintextPassword,
-                    userId
+                    plaintextPassword
                 );
 
                 // C1: Client --> Server: Registration Request
@@ -90,8 +87,7 @@ describe.each([OpaqueID.OPAQUE_P256])(
 
             it('should finish registration on server-side', async () => {
                 const registrationRequest = await client.registerInit(
-                    plaintextPassword,
-                    userId
+                    plaintextPassword
                 );
 
                 // C1: Client --> Server: Registration Request
