@@ -10,13 +10,7 @@ import {
     RegistrationRecord,
     RegistrationRequest,
 } from '@cloudflare/opaque-ts';
-import {
-    bufferToHexString,
-    hexStringToArray,
-    PakeServerDriver,
-    SerialData,
-    ServerAuthInitResponse,
-} from '@jayj/pake';
+import { PakeServerDriver, ServerAuthInitResponse } from '@jayj/pake';
 import { OpaqueCloudflareUtil } from '../common';
 
 export class OpaqueCloudflareServerDriver {
@@ -41,16 +35,16 @@ export class OpaqueCloudflareServerDriver {
     }
 
     public async registerInit(
-        requestData: SerialData,
+        requestData: Uint8Array,
         credentialId: string
-    ): Promise<SerialData> {
+    ): Promise<Uint8Array> {
         if (this.server == null) {
             throw new Error('Server undefined');
         }
 
         const request = RegistrationRequest.deserialize(
             this.config,
-            hexStringToArray(requestData)
+            Array.from(requestData)
         );
 
         const response = await this.server.registerInit(request, credentialId);
@@ -59,30 +53,30 @@ export class OpaqueCloudflareServerDriver {
             throw new Error(`Server failed to registerInit: ${response}`);
         }
 
-        return bufferToHexString(response.serialize());
+        return Uint8Array.from(response.serialize());
     }
 
     public async registerFinish(
-        recordData: SerialData,
+        recordData: Uint8Array,
         credentialId: string,
         userId: string
-    ): Promise<SerialData> {
+    ): Promise<Uint8Array> {
         if (this.server == null) {
             throw new Error('Server undefined');
         }
 
         const record = RegistrationRecord.deserialize(
             this.config,
-            hexStringToArray(recordData)
+            Array.from(recordData)
         );
 
         const credentialFile = new CredentialFile(credentialId, record, userId);
-        return bufferToHexString(credentialFile.serialize());
+        return Uint8Array.from(credentialFile.serialize());
     }
 
     public async authInit(
-        clientAuthRequestData: SerialData,
-        clientCredentialFileData: SerialData
+        clientAuthRequestData: Uint8Array,
+        clientCredentialFileData: Uint8Array
     ): Promise<ServerAuthInitResponse> {
         if (this.server == null) {
             throw new Error('Server undefined');
@@ -90,12 +84,12 @@ export class OpaqueCloudflareServerDriver {
 
         const ke1 = KE1.deserialize(
             this.config,
-            hexStringToArray(clientAuthRequestData)
+            Array.from(clientAuthRequestData)
         );
 
         const credentialFile = CredentialFile.deserialize(
             this.config,
-            hexStringToArray(clientCredentialFileData)
+            Array.from(clientCredentialFileData)
         );
 
         const response = await this.server.authInit(
@@ -112,27 +106,24 @@ export class OpaqueCloudflareServerDriver {
         const { ke2, expected } = response;
 
         return {
-            serverResponse: bufferToHexString(ke2.serialize()),
-            expectedAuthResult: bufferToHexString(expected.serialize()),
+            serverResponse: Uint8Array.from(ke2.serialize()),
+            expectedAuthResult: Uint8Array.from(expected.serialize()),
         };
     }
 
     public async authFinish(
-        clientRequestData: SerialData,
-        expectedAuthResultData: SerialData
-    ): Promise<SerialData> {
+        clientRequestData: Uint8Array,
+        expectedAuthResultData: Uint8Array
+    ): Promise<Uint8Array> {
         if (this.server == null) {
             throw new Error('Server undefined');
         }
 
-        const ke3 = KE3.deserialize(
-            this.config,
-            hexStringToArray(clientRequestData)
-        );
+        const ke3 = KE3.deserialize(this.config, Array.from(clientRequestData));
 
         const expectedAuthResult = ExpectedAuthResult.deserialize(
             this.config,
-            hexStringToArray(expectedAuthResultData)
+            Array.from(expectedAuthResultData)
         );
 
         const authResult = await this.server.authFinish(
@@ -148,6 +139,6 @@ export class OpaqueCloudflareServerDriver {
 
         const { session_key } = authResult;
 
-        return bufferToHexString(session_key);
+        return Uint8Array.from(session_key);
     }
 }

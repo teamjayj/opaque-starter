@@ -1,13 +1,6 @@
-import {
-    Config,
-    CredentialFile,
-    getOpaqueConfig,
-    OpaqueID,
-    RegistrationRecord,
-} from '@cloudflare/opaque-ts';
+import { Config, getOpaqueConfig, OpaqueID } from '@cloudflare/opaque-ts';
 import { OpaqueCloudflareServerDriver } from '../server';
 import { OpaqueCloudflareClientDriver } from '../client';
-import { hexStringToArray, SerialData } from '@jayj/pake';
 
 describe.each([OpaqueID.OPAQUE_P256])(
     'Authentication end-to-end driver test',
@@ -16,7 +9,7 @@ describe.each([OpaqueID.OPAQUE_P256])(
             let config: Readonly<Config>;
             let client: OpaqueCloudflareClientDriver;
             let server: OpaqueCloudflareServerDriver;
-            let credentialFile: SerialData;
+            let credentialFile: Uint8Array;
 
             const plaintextPassword = 'password';
             const userId = 'bob';

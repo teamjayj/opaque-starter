@@ -1,4 +1,4 @@
-import { SerialData, ServerAuthInitResponse } from '../common';
+import { ServerAuthInitResponse } from '../common';
 
 export interface PakeServerDriver {
     /**
@@ -14,9 +14,9 @@ export interface PakeServerDriver {
      * @returns serialized registration response
      */
     registerInit(
-        clientRequestData: SerialData,
+        clientRequestData: Uint8Array,
         credentialId: string
-    ): Promise<SerialData>;
+    ): Promise<Uint8Array>;
 
     /**
      * Finishes the password registration step, processes a client registration
@@ -29,10 +29,10 @@ export interface PakeServerDriver {
      * @returns serialized credential file
      */
     registerFinish(
-        registrationRecordData: SerialData,
+        registrationRecordData: Uint8Array,
         credentialId: string,
         userId: string
-    ): Promise<SerialData>;
+    ): Promise<Uint8Array>;
 
     /**
      * Recovers the credential file of a client by performing the first key exchange
@@ -44,8 +44,8 @@ export interface PakeServerDriver {
      * @returns serialized authentication response containing data for `KE2`
      */
     authInit(
-        clientRequestData: SerialData,
-        clientCredentialFileData: SerialData
+        clientRequestData: Uint8Array,
+        clientCredentialFileData: Uint8Array
     ): Promise<ServerAuthInitResponse>;
 
     /**
@@ -57,7 +57,7 @@ export interface PakeServerDriver {
      * @returns serialized authentication response containing server session key
      */
     authFinish(
-        clientRequestData: SerialData,
-        expectedAuthResultData: SerialData
-    ): Promise<SerialData>;
+        clientRequestData: Uint8Array,
+        expectedAuthResultData: Uint8Array
+    ): Promise<Uint8Array>;
 }

@@ -1,4 +1,4 @@
-import { ClientAuthFinishResponse, SerialData } from '../common';
+import { ClientAuthFinishResponse } from '../common';
 
 export interface PakeClientDriver {
     /**
@@ -15,7 +15,7 @@ export interface PakeClientDriver {
      *
      * @returns serialized registration request
      */
-    registerInit(password: string, userId: string): Promise<SerialData>;
+    registerInit(password: string, userId: string): Promise<Uint8Array>;
 
     /**
      * Creates a registration record for the server after initializing password
@@ -28,10 +28,10 @@ export interface PakeClientDriver {
      * @returns serialized registration record
      */
     registerFinish(
-        serverResponseData: SerialData,
+        serverResponseData: Uint8Array,
         userId: string,
         serverId: string
-    ): Promise<SerialData>;
+    ): Promise<Uint8Array>;
 
     /**
      * Initializes the authentication step and creates a request for the first
@@ -41,7 +41,7 @@ export interface PakeClientDriver {
      *
      * @returns serialized authentication request containing data for `KE1`
      */
-    authInit(password: string): Promise<SerialData>;
+    authInit(password: string): Promise<Uint8Array>;
 
     /**
      * Performs the second key exchange (`KE2`) and creates a request for the
@@ -55,7 +55,7 @@ export interface PakeClientDriver {
      * and client session key
      */
     authFinish(
-        serverResponseData: SerialData,
+        serverResponseData: Uint8Array,
         userId: string,
         serverId: string
     ): Promise<ClientAuthFinishResponse>;

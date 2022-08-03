@@ -6,7 +6,6 @@ import {
 } from '@cloudflare/opaque-ts';
 import { OpaqueCloudflareServerDriver } from '../server';
 import { OpaqueCloudflareClientDriver } from '../client';
-import { hexStringToArray } from '@jayj/pake';
 
 describe.each([OpaqueID.OPAQUE_P256])(
     'Registration end-to-end driver test',
@@ -80,7 +79,7 @@ describe.each([OpaqueID.OPAQUE_P256])(
 
                 const record = RegistrationRecord.deserialize(
                     config,
-                    hexStringToArray(registrationRecord)
+                    Array.from(registrationRecord)
                 );
 
                 expect(record).toBeDefined();
