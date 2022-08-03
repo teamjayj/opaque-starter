@@ -57,3 +57,9 @@ export const bufferToHexString = (buffer: number[]): string => {
     });
     return hexString;
 };
+
+export const uint8ArrayToHexString = (byteArray: Uint8Array): string => {
+    return Array.from(byteArray, function (byte) {
+        return ('0' + (byte & 0xff).toString(16)).slice(-2);
+    }).join('');
+};
