@@ -1,5 +1,9 @@
 import { Application, Request, Response } from 'express';
-import { PakeServerDriver } from '@jayj/pake';
+import {
+    hexStringToUint8Array,
+    PakeServerDriver,
+    uint8ArrayToHexString,
+} from '@jayj/pake';
 
 export type RouteParams = {
     registerInitEndpoint: string;
@@ -20,7 +24,7 @@ export class OpaqueExpress {
         this.app.post(
             params.registerInitEndpoint,
             async (req: Request, res: Response) => {
-                const clientRequestData = req.body.data;
+                const clientRequestData = hexStringToUint8Array(req.body.data);
                 const credentialId = params.credentialIdGenerator();
 
                 const registrationResponse = await this.driver.registerInit(
@@ -30,7 +34,8 @@ export class OpaqueExpress {
 
                 return res.json({
                     credentialId,
-                    registrationResponse,
+                    registrationResponse:
+                        uint8ArrayToHexString(registrationResponse),
                 });
             }
         );
@@ -38,7 +43,7 @@ export class OpaqueExpress {
         this.app.post(
             params.registerFinishEndpoint,
             async (req: Request, res: Response) => {
-                const registrationRecord = req.body.data;
+                const registrationRecord = hexStringToUint8Array(req.body.data);
                 const credentialId = req.body.credentialId;
                 const userId = req.body.userId;
 
