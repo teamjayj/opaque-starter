@@ -11,11 +11,10 @@ export interface PakeClientDriver {
      * for the server to process.
      *
      * @param password - plaintext password
-     * @param userId - user identifier such as username
      *
      * @returns serialized registration request
      */
-    registerInit(password: string, userId: string): Promise<Uint8Array>;
+    registerInit(password: string): Promise<Uint8Array>;
 
     /**
      * Creates a registration record for the server after initializing password

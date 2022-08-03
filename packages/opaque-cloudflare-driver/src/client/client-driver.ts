@@ -19,10 +19,7 @@ export class OpaqueCloudflareClientDriver implements PakeClientDriver {
 
     public async initialize(): Promise<void> {}
 
-    public async registerInit(
-        password: string,
-        userId: string
-    ): Promise<Uint8Array> {
+    public async registerInit(password: string): Promise<Uint8Array> {
         const request = await this.client.registerInit(password);
 
         if (request instanceof Error) {
