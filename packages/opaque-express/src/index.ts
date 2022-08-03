@@ -1,36 +1,51 @@
 import { Application, Request, Response } from 'express';
 import {
-    CredentialStore,
+    OpaqueCredentialStore,
     hexStringToUint8Array,
     PakeServerDriver,
     uint8ArrayToHexString,
+    OpaqueSessionStore,
 } from '@jayj/pake';
 
 export type RouteParams = {
     registerInitEndpoint: string;
     registerFinishEndpoint: string;
+    authInitEndpoint: string;
+    authFinishEndpoint: string;
     credentialIdGenerator: () => string;
+    sessionIdGenerator: () => string;
 };
 
 export class OpaqueExpress {
     constructor(
         private app: Application,
         private driver: PakeServerDriver,
-        private credentialStore: CredentialStore
+        private credentialStore: OpaqueCredentialStore,
+        private sessionStore: OpaqueSessionStore
     ) {
         this.createRoutes({
-            registerInitEndpoint: '/registerInit',
-            registerFinishEndpoint: '/registerFinish',
+            registerInitEndpoint: '/register-0',
+            registerFinishEndpoint: '/register-1',
+            authInitEndpoint: '/login-0',
+            authFinishEndpoint: '/login-1',
             credentialIdGenerator: () => 'credentialId',
+            sessionIdGenerator: () => 'sessionId',
         });
     }
 
-    private createRoutes(params: RouteParams) {
+    private createRoutes({
+        registerInitEndpoint,
+        registerFinishEndpoint,
+        authInitEndpoint,
+        authFinishEndpoint,
+        credentialIdGenerator,
+        sessionIdGenerator,
+    }: RouteParams) {
         this.app.post(
-            params.registerInitEndpoint,
+            registerInitEndpoint,
             async (req: Request, res: Response) => {
                 const clientRequestData = hexStringToUint8Array(req.body.data);
-                const credentialId = params.credentialIdGenerator();
+                const credentialId = credentialIdGenerator();
 
                 const registrationResponse = await this.driver.registerInit(
                     clientRequestData,
@@ -46,7 +61,7 @@ export class OpaqueExpress {
         );
 
         this.app.post(
-            params.registerFinishEndpoint,
+            registerFinishEndpoint,
             async (req: Request, res: Response) => {
                 const registrationRecord = hexStringToUint8Array(req.body.data);
                 const credentialId = req.body.credentialId;
@@ -58,10 +73,50 @@ export class OpaqueExpress {
                     userId
                 );
 
-                await this.credentialStore.store(credentialFile);
+                await this.credentialStore.store(credentialId, credentialFile);
 
                 return res.json({
                     success: true,
+                });
+            }
+        );
+
+        this.app.post(authInitEndpoint, async (req: Request, res: Response) => {
+            const clientRequestData = hexStringToUint8Array(req.body.data);
+            const credentialId = req.body.credentialId;
+
+            const credentialFile = await this.credentialStore.get(credentialId);
+
+            const { serverResponse, expectedAuthResult } =
+                await this.driver.authInit(clientRequestData, credentialFile);
+
+            const sessionId = sessionIdGenerator();
+
+            await this.sessionStore.store(sessionId, expectedAuthResult);
+
+            return res.json({
+                sessionId,
+                serverResponse: uint8ArrayToHexString(serverResponse),
+            });
+        });
+
+        this.app.post(
+            authFinishEndpoint,
+            async (req: Request, res: Response) => {
+                const clientRequestData = hexStringToUint8Array(req.body.data);
+                const sessionId = req.body.sessionId;
+
+                const expectedAuthResultData = await this.sessionStore.get(
+                    sessionId
+                );
+
+                const sessionKey = await this.driver.authFinish(
+                    clientRequestData,
+                    expectedAuthResultData
+                );
+
+                return res.json({
+                    sessionKey: uint8ArrayToHexString(sessionKey),
                 });
             }
         );
