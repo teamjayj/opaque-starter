@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "eslint-config-custom": "*",
-    "turbo": "latest"
+    "turbo": "^1.4.3"
   },
   "engines": {
     "npm": ">=7.0.0",
