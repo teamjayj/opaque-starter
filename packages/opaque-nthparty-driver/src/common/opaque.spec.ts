@@ -1,3 +1,4 @@
+import { describe, beforeAll, afterEach, it, expect } from 'vitest';
 import sodium from 'libsodium-wrappers-sumo';
 import OPRF from 'oprf';
 import { OpaqueNthPartyProtocol, OpaqueNthPartyUtil } from '.';

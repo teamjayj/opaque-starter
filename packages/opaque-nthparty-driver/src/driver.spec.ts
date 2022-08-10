@@ -1,3 +1,4 @@
+import { describe, beforeAll, it, expect } from 'vitest';
 import Sodium from 'libsodium-wrappers-sumo';
 import { OpaqueNthPartyDriver } from './driver';
 
