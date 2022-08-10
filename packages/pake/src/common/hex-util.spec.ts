@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { hexStringToUint8Array } from '.';
 
 describe('Hex util', () => {
