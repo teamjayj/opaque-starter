@@ -1,3 +1,4 @@
+import { describe, beforeEach, it, expect } from 'vitest';
 import { Config, getOpaqueConfig, OpaqueID } from '@cloudflare/opaque-ts';
 import { OpaqueCloudflareServerDriver } from '../server';
 import { OpaqueCloudflareClientDriver } from '../client';
