@@ -23,7 +23,6 @@
         "vitest": "^0.21.1"
     },
     "dependencies": {
-        "@teamjayj/pake": "*",
-        "node-cache": "^5.1.2"
+        "@teamjayj/pake": "*"
     }
 }
