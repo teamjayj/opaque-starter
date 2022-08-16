@@ -1,5 +1,5 @@
 {
-    "name": "@jayj/opaque-express",
+    "name": "@teamjayj/opaque-express",
     "version": "0.0.0",
     "main": "./src/index.ts",
     "types": "./src/index.ts",
@@ -21,7 +21,7 @@
         "vitest": "^0.21.1"
     },
     "dependencies": {
-        "@jayj/pake": "*",
+        "@teamjayj/pake": "*",
         "node-cache": "^5.1.2"
     }
 }
