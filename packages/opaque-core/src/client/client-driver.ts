@@ -1,6 +1,6 @@
 import { ClientAuthFinishResponse } from '../common';
 
-export interface PakeClientDriver {
+export interface OpaqueClientDriver {
     /**
      * Initializes the driver.
      */

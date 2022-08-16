@@ -1,6 +1,6 @@
 import { ServerAuthInitResponse } from '../common';
 
-export interface PakeServerDriver {
+export interface OpaqueServerDriver {
     /**
      * Initializes the driver.
      */
