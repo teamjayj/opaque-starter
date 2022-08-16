@@ -1,4 +1,4 @@
-import { OpaqueSessionStore } from '@jayj/pake';
+import { OpaqueSessionStore } from '..';
 import NodeCache from 'node-cache';
 
 export class InMemoryOpaqueSessionStore implements OpaqueSessionStore {

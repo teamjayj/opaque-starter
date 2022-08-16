@@ -1,4 +1,4 @@
-import { OpaqueCredentialStore } from '@jayj/pake';
+import { OpaqueCredentialStore } from '..';
 import NodeCache from 'node-cache';
 
 export class InMemoryOpaqueCredentialStore implements OpaqueCredentialStore {
