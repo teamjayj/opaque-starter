@@ -6,9 +6,12 @@ import {
     OpaqueID,
     RegistrationResponse,
 } from '@cloudflare/opaque-ts';
-import { ClientAuthFinishResponse, PakeClientDriver } from '@teamjayj/pake';
+import {
+    ClientAuthFinishResponse,
+    OpaqueClientDriver,
+} from '@teamjayj/opaque-core';
 
-export class OpaqueCloudflareClientDriver implements PakeClientDriver {
+export class OpaqueCloudflareClientDriver implements OpaqueClientDriver {
     private config: Readonly<Config>;
     private client: OpaqueClient;
 

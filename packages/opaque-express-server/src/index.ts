@@ -2,10 +2,10 @@ import { Application, Request, Response } from 'express';
 import {
     OpaqueCredentialStore,
     hexStringToUint8Array,
-    PakeServerDriver,
+    OpaqueServerDriver,
     uint8ArrayToHexString,
     OpaqueSessionStore,
-} from '@teamjayj/pake';
+} from '@teamjayj/opaque-core';
 
 export type RouteParams = {
     registerInitEndpoint: string;
@@ -19,7 +19,7 @@ export type RouteParams = {
 export class OpaqueExpress {
     constructor(
         private app: Application,
-        private driver: PakeServerDriver,
+        private driver: OpaqueServerDriver,
         private credentialStore: OpaqueCredentialStore,
         private sessionStore: OpaqueSessionStore
     ) {

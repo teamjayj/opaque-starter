@@ -21,6 +21,6 @@
     },
     "dependencies": {
         "@cloudflare/opaque-ts": "^0.7.5",
-        "@teamjayj/pake": "*"
+        "@teamjayj/opaque-core": "*"
     }
 }
