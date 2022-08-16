@@ -10,10 +10,13 @@ import {
     RegistrationRecord,
     RegistrationRequest,
 } from '@cloudflare/opaque-ts';
-import { PakeServerDriver, ServerAuthInitResponse } from '@teamjayj/pake';
+import {
+    OpaqueServerDriver,
+    ServerAuthInitResponse,
+} from '@teamjayj/opaque-core';
 import { OpaqueCloudflareUtil } from '../common';
 
-export class OpaqueCloudflareServerDriver implements PakeServerDriver {
+export class OpaqueCloudflareServerDriver implements OpaqueServerDriver {
     private config: Readonly<Config>;
     private util: OpaqueCloudflareUtil;
     private server: OpaqueServer | undefined;
