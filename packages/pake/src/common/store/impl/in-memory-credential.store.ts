@@ -1,11 +1,10 @@
 import { OpaqueCredentialStore } from '..';
-import NodeCache from 'node-cache';
 
 export class InMemoryOpaqueCredentialStore implements OpaqueCredentialStore {
-    protected cache: NodeCache;
+    protected cache: Map<string, Uint8Array>;
 
     constructor() {
-        this.cache = new NodeCache();
+        this.cache = new Map();
     }
 
     public async store(
@@ -20,7 +19,7 @@ export class InMemoryOpaqueCredentialStore implements OpaqueCredentialStore {
     }
 
     public async get(credentialId: string): Promise<Uint8Array> {
-        const value = this.cache.get<Uint8Array>(credentialId);
+        const value = this.cache.get(credentialId);
 
         if (value == null) {
             throw new Error(`${credentialId} is undefined in store`);

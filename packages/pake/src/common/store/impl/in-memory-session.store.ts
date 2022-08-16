@@ -1,11 +1,10 @@
 import { OpaqueSessionStore } from '..';
-import NodeCache from 'node-cache';
 
 export class InMemoryOpaqueSessionStore implements OpaqueSessionStore {
-    protected cache: NodeCache;
+    protected cache: Map<string, Uint8Array>;
 
     constructor() {
-        this.cache = new NodeCache();
+        this.cache = new Map();
     }
 
     public async store(
@@ -17,11 +16,11 @@ export class InMemoryOpaqueSessionStore implements OpaqueSessionStore {
             throw new Error(`${sessionId} is already set in store`);
         }
 
-        this.cache.set(sessionId, expectedAuthResult, ttl);
+        this.cache.set(sessionId, expectedAuthResult);
     }
 
     public async get(sessionId: string): Promise<Uint8Array> {
-        const value = this.cache.get<Uint8Array>(sessionId);
+        const value = this.cache.get(sessionId);
 
         if (value == null) {
             throw new Error(`${sessionId} is undefined in store`);
