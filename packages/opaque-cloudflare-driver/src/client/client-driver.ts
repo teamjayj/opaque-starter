@@ -3,20 +3,21 @@ import {
     getOpaqueConfig,
     KE2,
     OpaqueClient,
-    OpaqueID,
     RegistrationResponse,
 } from '@cloudflare/opaque-ts';
 import {
     ClientAuthFinishResponse,
     OpaqueClientDriver,
+    OpaqueCipherSuite,
 } from '@teamjayj/opaque-core';
+import { getOpaqueIDFromSuite } from '../common';
 
 export class OpaqueCloudflareClientDriver implements OpaqueClientDriver {
     private config: Readonly<Config>;
     private client: OpaqueClient;
 
-    constructor(opaqueId: OpaqueID) {
-        this.config = getOpaqueConfig(opaqueId);
+    constructor(cipherSuite: OpaqueCipherSuite) {
+        this.config = getOpaqueConfig(getOpaqueIDFromSuite(cipherSuite));
         this.client = new OpaqueClient(this.config);
     }
 

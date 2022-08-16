@@ -5,24 +5,24 @@ import {
     getOpaqueConfig,
     KE1,
     KE3,
-    OpaqueID,
     OpaqueServer,
     RegistrationRecord,
     RegistrationRequest,
 } from '@cloudflare/opaque-ts';
 import {
+    OpaqueCipherSuite,
     OpaqueServerDriver,
     ServerAuthInitResponse,
 } from '@teamjayj/opaque-core';
-import { OpaqueCloudflareUtil } from '../common';
+import { getOpaqueIDFromSuite, OpaqueCloudflareUtil } from '../common';
 
 export class OpaqueCloudflareServerDriver implements OpaqueServerDriver {
     private config: Readonly<Config>;
     private util: OpaqueCloudflareUtil;
     private server: OpaqueServer | undefined;
 
-    constructor(private serverId: string, opaqueId: OpaqueID) {
-        this.config = getOpaqueConfig(opaqueId);
+    constructor(private serverId: string, cipherSuite: OpaqueCipherSuite) {
+        this.config = getOpaqueConfig(getOpaqueIDFromSuite(cipherSuite));
         this.util = new OpaqueCloudflareUtil(this.config);
     }
 

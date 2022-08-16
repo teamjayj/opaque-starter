@@ -2,16 +2,17 @@ import { describe, beforeEach, it, expect } from 'vitest';
 import {
     Config,
     getOpaqueConfig,
-    OpaqueID,
     RegistrationRecord,
 } from '@cloudflare/opaque-ts';
 import { OpaqueCloudflareServerDriver } from '../server';
 import { OpaqueCloudflareClientDriver } from '../client';
+import { OpaqueCipherSuite } from '@teamjayj/opaque-core';
+import { getOpaqueIDFromSuite } from './id-util';
 
-describe.each([OpaqueID.OPAQUE_P256])(
+describe.each([OpaqueCipherSuite.P256_SHA256])(
     'Registration end-to-end driver test',
-    (opaqueID: OpaqueID) => {
-        describe(OpaqueID[opaqueID], () => {
+    (cipherSuite: OpaqueCipherSuite) => {
+        describe(OpaqueCipherSuite[cipherSuite], () => {
             let config: Readonly<Config>;
             let client: OpaqueCloudflareClientDriver;
             let server: OpaqueCloudflareServerDriver;
@@ -22,9 +23,12 @@ describe.each([OpaqueID.OPAQUE_P256])(
             const credentialId = 'credential-id';
 
             beforeEach(async () => {
-                config = getOpaqueConfig(opaqueID);
-                client = new OpaqueCloudflareClientDriver(opaqueID);
-                server = new OpaqueCloudflareServerDriver(serverId, opaqueID);
+                config = getOpaqueConfig(getOpaqueIDFromSuite(cipherSuite));
+                client = new OpaqueCloudflareClientDriver(cipherSuite);
+                server = new OpaqueCloudflareServerDriver(
+                    serverId,
+                    cipherSuite
+                );
 
                 await client.initialize();
                 await server.initialize();
