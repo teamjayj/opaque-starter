@@ -1,5 +1,5 @@
 {
-    "name": "@teamjayj/opaque-express",
+    "name": "@teamjayj/opaque-express-server",
     "version": "0.0.0",
     "main": "./src/index.ts",
     "types": "./src/index.ts",
