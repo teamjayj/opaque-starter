@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { hexStringToUint8Array } from '.';
+import { hexStringToUint8Array } from '..';
 
 describe('Hex util', () => {
     it('should convert hex string to uint8array', async () => {
