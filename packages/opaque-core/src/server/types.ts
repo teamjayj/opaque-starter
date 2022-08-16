@@ -20,7 +20,7 @@ export type OpaqueServerGeneratorConfig = {
 
 export type OpaqueServerConfig = {
     driver: OpaqueServerDriver;
-    stores: OpaqueServerStoreConfig;
+    stores?: OpaqueServerStoreConfig;
     routes?: OpaqueServerRouteConfig;
     generators?: OpaqueServerGeneratorConfig;
 };

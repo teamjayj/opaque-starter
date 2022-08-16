@@ -1,3 +1,7 @@
+import {
+    InMemoryOpaqueCredentialStore,
+    InMemoryOpaqueSessionStore,
+} from '../common';
 import { OpaqueServerDriver } from './server-driver';
 import {
     OpaqueServerStoreConfig,
@@ -14,9 +18,22 @@ export class OpaqueServer {
 
     constructor(config: OpaqueServerConfig) {
         this.driver = config.driver;
-        this.stores = config.stores;
+        this.stores = this.getStoreConfig(config);
         this.routes = this.getRouteConfig(config);
         this.generators = this.getGeneratorConfig(config);
+    }
+
+    private getStoreConfig(
+        config: OpaqueServerConfig
+    ): OpaqueServerStoreConfig {
+        if (config.stores == null) {
+            return {
+                credentialStore: new InMemoryOpaqueCredentialStore(),
+                sessionStore: new InMemoryOpaqueSessionStore(),
+            };
+        } else {
+            return config.stores;
+        }
     }
 
     private getRouteConfig(
