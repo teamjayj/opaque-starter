@@ -1,4 +1,4 @@
-import { describe, beforeEach, it, expect } from 'vitest';
+import { describe, beforeEach, it, expect, beforeAll } from 'vitest';
 import { Config, getOpaqueConfig } from '@cloudflare/opaque-ts';
 import { OpaqueCloudflareServerDriver } from '../server';
 import { OpaqueCloudflareClientDriver } from '../client';
@@ -19,16 +19,20 @@ describe.each([OpaqueCipherSuite.P256_SHA256])(
             const serverId = 'server';
             const credentialId = 'credential-id';
 
-            beforeEach(async () => {
+            beforeAll(async () => {
                 config = getOpaqueConfig(getOpaqueIDFromSuite(cipherSuite));
-                client = new OpaqueCloudflareClientDriver(cipherSuite);
+
                 server = new OpaqueCloudflareServerDriver(
                     serverId,
                     cipherSuite
                 );
 
-                await client.initialize();
                 await server.initialize();
+            });
+
+            beforeEach(async () => {
+                client = new OpaqueCloudflareClientDriver(cipherSuite);
+                await client.initialize();
 
                 const registrationRequest = await client.registerInit(
                     plaintextPassword
