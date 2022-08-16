@@ -5,7 +5,7 @@ import {
     PakeServerDriver,
     uint8ArrayToHexString,
     OpaqueSessionStore,
-} from '@jayj/pake';
+} from '@teamjayj/pake';
 
 export type RouteParams = {
     registerInitEndpoint: string;

@@ -10,7 +10,7 @@ import {
     RegistrationRecord,
     RegistrationRequest,
 } from '@cloudflare/opaque-ts';
-import { PakeServerDriver, ServerAuthInitResponse } from '@jayj/pake';
+import { PakeServerDriver, ServerAuthInitResponse } from '@teamjayj/pake';
 import { OpaqueCloudflareUtil } from '../common';
 
 export class OpaqueCloudflareServerDriver implements PakeServerDriver {
