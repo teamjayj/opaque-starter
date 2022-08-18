@@ -7,5 +7,8 @@ export default defineConfig({
             reporter: ['text', 'html'],
             exclude: ['node_modules', './test/vitest.setup-file.ts'],
         },
+        deps: {
+            inline: true,
+        },
     },
 });
