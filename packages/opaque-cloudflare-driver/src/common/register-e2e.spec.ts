@@ -45,6 +45,21 @@ describe.each([OpaqueCipherSuite.P256_SHA256])(
                 expect(registrationRequest).toBeTruthy();
             });
 
+            it('should blind the password uniquely on every client register', async () => {
+                const registrationRequest1 = await client.registerInit(
+                    plaintextPassword
+                );
+
+                client = new OpaqueCloudflareClientDriver(cipherSuite);
+                await client.initialize();
+
+                const registrationRequest2 = await client.registerInit(
+                    plaintextPassword
+                );
+
+                expect(registrationRequest1).not.toEqual(registrationRequest2);
+            });
+
             it('should accept registration request from client', async () => {
                 const registrationRequest = await client.registerInit(
                     plaintextPassword
