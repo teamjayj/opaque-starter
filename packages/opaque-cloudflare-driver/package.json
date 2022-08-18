@@ -1,10 +1,14 @@
 {
     "name": "@teamjayj/opaque-cloudflare-driver",
+    "type": "module",
     "version": "0.0.0",
-    "main": "./src/index.ts",
-    "types": "./src/index.ts",
+    "main": "./dist/src/index.js",
+    "types": "./dist/src/index.d.ts",
     "license": "MIT",
     "scripts": {
+        "build": "tsc",
+        "pregenerate": "yarn build",
+        "generate": "node --experimental-specifier-resolution=node dist/lib/credential-generator",
         "test": "vitest run",
         "test:watch": "vitest watch",
         "test:coverage": "vitest run --coverage",
