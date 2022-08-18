@@ -14,7 +14,7 @@ export type OpaqueServerStoreConfig = {
 };
 
 export type OpaqueServerGeneratorConfig = {
-    credentialIdGenerator: () => string;
+    credentialIdGenerator: (userId: string) => string;
     sessionIdGenerator: () => string;
 };
 

@@ -9,6 +9,7 @@ import {
     OpaqueServerGeneratorConfig,
     OpaqueServerConfig,
 } from './types';
+import { v4 as uuidv4 } from 'uuid';
 
 export class OpaqueServer {
     protected driver: OpaqueServerDriver;
@@ -56,8 +57,8 @@ export class OpaqueServer {
     ): OpaqueServerGeneratorConfig {
         if (config.generators == null) {
             return {
-                credentialIdGenerator: () => 'credentialId',
-                sessionIdGenerator: () => 'sessionId',
+                credentialIdGenerator: (userId: string) => userId,
+                sessionIdGenerator: () => uuidv4(),
             };
         } else {
             return config.generators;
