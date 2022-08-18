@@ -24,6 +24,10 @@ export class OpaqueServer {
         this.generators = this.getGeneratorConfig(config);
     }
 
+    public async initialize(): Promise<void> {
+        await this.driver.initialize();
+    }
+
     private getStoreConfig(
         config: OpaqueServerConfig
     ): OpaqueServerStoreConfig {
