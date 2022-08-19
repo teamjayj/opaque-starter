@@ -43,6 +43,8 @@ export class CredentialGenerator {
     }
 
     public async generate(): Promise<void> {
+        console.log('Generating credentials for: ' + this.userId);
+
         const registerResult = await this.register(
             this.userId,
             this.plaintextPassword,
