@@ -29,6 +29,7 @@
         "vitest": "^0.21.1"
     },
     "dependencies": {
+        "@teamjayj/opaque-cloudflare-driver": "*",
         "@teamjayj/opaque-core": "*"
     }
 }
