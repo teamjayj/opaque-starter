@@ -6,7 +6,7 @@ import { OpaqueCloudflareServerDriver } from '@teamjayj/opaque-cloudflare-driver
 import { OpaqueCipherSuite } from '@teamjayj/opaque-core';
 import { createServer } from '.';
 
-describe('End-to-end test', () => {
+describe('Registration protocol express server test', () => {
     let app: Application;
 
     const userId = 'bob';
