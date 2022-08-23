@@ -1,38 +1,46 @@
-# Turborepo starter
+# opaque-starter
 
-This is an official Yarn v1 starter turborepo.
+It is a monorepository containing packages relevant for the implementation of the [OPAQUE asymmetric PAKE (aPAKE) protocol](https://eprint.iacr.org/2018/163.pdf) in JavaScript/TypeScript.
 
-## What's inside?
+This monorepo aims to create an abstraction layer on top of existing OPAQUE libraries, server frameworks, and front-end web frameworks/libraries.
 
-This turborepo uses [Yarn](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following packages/apps:
+## Packages
 
-### Apps and Packages
+Each package has [TypeScript](https://www.typescriptlang.org/) support and targets ECMAScript 2015 (ES6) as its minimum version.
 
--   `docs`: a [Next.js](https://nextjs.org) app
--   `web`: another [Next.js](https://nextjs.org) app
--   `ui`: a stub React component library shared by both `web` and `docs` applications
--   `eslint-config-custom`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
--   `tsconfig`: `tsconfig.json`s used throughout the monorepo
+### Core
 
--   `@jayj/pake`: password-authenticated key exchange (PAKE) API
+`@teamjayj/opaque-core` is the common package that provides an API needed by drivers, clients, and servers of `opaque-starter`.
 
-#### Drivers
+### Drivers
 
-| Driver                           | Implementation          | IETF Draft Version                                                                                     | Crypto      |
-| -------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------ | ----------- |
-| `@jayj/opaque-cloudflare-driver` | `@cloudflare/opaque-ts` | [`draft-irtf-cfrg-opaque-07`](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-opaque-07)         | `sjcl`      |
-| `@jayj/opaque-nthparty-driver`   | `@nthparty/opaque`      | [`draft-krawczyk-cfrg-opaque-06`](https://datatracker.ietf.org/doc/html/draft-krawczyk-cfrg-opaque-06) | `libsodium` |
-| `@jayj/opaque-stef-driver`       | `libopaque`             | [`draft-irtf-cfrg-opaque-09`](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-opaque)            | `libsodium` |
+`opaque-starter` has drivers for the existing JavaScript OPAQUE authentication libraries.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+| Package                                    | Implementation                                                      |
+| ------------------------------------------ | ------------------------------------------------------------------- |
+| `@teamjayj/opaque-cloudflare-driver`       | [`@cloudflare/opaque-ts`](https://github.com/cloudflare/opaque-ts/) |
+| `@teamjayj/opaque-nthparty-driver` (Draft) | [`@nthparty/opaque`](https://github.com/nthparty/opaque)            |
+
+### Servers
+
+`opaque-starter` has available implementations of OPAQUE authentication in popular JavaScript server frameworks.
+
+| Package                           | Server Framework                    |
+| --------------------------------- | ----------------------------------- |
+| `@teamjayj/opaque-express-server` | [`express`](https://expressjs.com/) |
 
 ### Utilities
 
-This turborepo has some additional tools already setup for you:
+This turborepo uses [Yarn v1](https://classic.yarnpkg.com/lang/en/) as a package manager. It includes the following tools:
 
 -   [TypeScript](https://www.typescriptlang.org/) for static type checking
+    -   `tsconfig` - `tsconfig.json`s used throughout the monorepo
 -   [ESLint](https://eslint.org/) for code linting
+
+    -   `eslint-config-custom` - `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+
 -   [Prettier](https://prettier.io) for code formatting
+-   [Vitest](https://vitest.dev/) for unit testing
 
 ## Setup
 
@@ -40,48 +48,18 @@ This repository is used in the `npx create-turbo` command, and selected when cho
 
 ### Build
 
-To build all apps and packages, run the following command:
+To build all packages, run the following command:
 
 ```
-cd my-turborepo
-yarn run build
+cd opaque-starter
+yarn build
 ```
 
-### Develop
+### Test
 
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-yarn run dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
+To run the tests of all packages, run the following command:
 
 ```
-cd my-turborepo
-npx turbo login
+cd opaque-starter
+yarn test
 ```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
--   [Pipelines](https://turborepo.org/docs/core-concepts/pipelines)
--   [Caching](https://turborepo.org/docs/core-concepts/caching)
--   [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching)
--   [Scoped Tasks](https://turborepo.org/docs/core-concepts/scopes)
--   [Configuration Options](https://turborepo.org/docs/reference/configuration)
--   [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)

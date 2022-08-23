@@ -1,6 +1,6 @@
-# opaque-nthparty-driver
+# @teamjayj/opaque-nthparty-driver
 
-A rewritten implementation of [`@nthparty/opaque`](https://github.com/nthparty/opaque) (version `0.3.0`) in TypeScript with updated types and dependencies.
+An `opaque-starter` driver for a rewritten implementation of [`@nthparty/opaque`](https://github.com/nthparty/opaque) (version `0.3.0`) in TypeScript with updated types and dependencies.
 
 ## Details
 
