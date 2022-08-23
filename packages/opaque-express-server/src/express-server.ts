@@ -12,16 +12,16 @@ export class OpaqueExpressServer extends OpaqueServer {
     }
 
     public createRoutes(app: Application): OpaqueExpressServer {
-        const {
-            registerInitEndpoint,
-            registerFinishEndpoint,
-            authInitEndpoint,
-            authFinishEndpoint,
-        } = this.routes;
+        this.createRegisterRoutes(app);
+        this.createLoginRoutes(app);
+        return this;
+    }
 
+    private createRegisterRoutes(app: Application): void {
         const driver = this.driver;
-        const { credentialIdGenerator, sessionIdGenerator } = this.generators;
-        const { credentialStore, sessionStore } = this.stores;
+        const { registerInitEndpoint, registerFinishEndpoint } = this.routes;
+        const { credentialIdGenerator } = this.generators;
+        const { credentialStore } = this.stores;
 
         app.post(
             registerInitEndpoint,
@@ -77,6 +77,13 @@ export class OpaqueExpressServer extends OpaqueServer {
                 }
             }
         );
+    }
+
+    private createLoginRoutes(app: Application): void {
+        const driver = this.driver;
+        const { authInitEndpoint, authFinishEndpoint } = this.routes;
+        const { credentialIdGenerator, sessionIdGenerator } = this.generators;
+        const { credentialStore, sessionStore } = this.stores;
 
         app.post(
             authInitEndpoint,
@@ -106,7 +113,7 @@ export class OpaqueExpressServer extends OpaqueServer {
 
                     return res.json({
                         sessionId,
-                        serverResponse: uint8ArrayToHexString(serverResponse),
+                        data: uint8ArrayToHexString(serverResponse),
                     });
                 } catch (error) {
                     next(error);
@@ -142,8 +149,6 @@ export class OpaqueExpressServer extends OpaqueServer {
                 }
             }
         );
-
-        return this;
     }
 
     private validateData(data: string): void {
