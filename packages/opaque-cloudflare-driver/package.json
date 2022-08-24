@@ -2,16 +2,15 @@
     "name": "@teamjayj/opaque-cloudflare-driver",
     "version": "0.1.0",
     "type": "module",
-    "main": "./dist/src/index.js",
-    "types": "./dist/src/index.d.ts",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "license": "MIT",
     "files": [
-        "dist/src"
+        "dist"
     ],
     "scripts": {
-        "build": "tsc",
-        "pregenerate": "yarn build",
-        "generate": "node --experimental-specifier-resolution=node dist/lib/credential-generator",
+        "build": "rollup --config",
+        "generate": "node lib/credential-generator/dist",
         "test": "vitest run",
         "test:watch": "vitest watch",
         "test:coverage": "vitest run --coverage",
@@ -23,12 +22,15 @@
         "c8": "^7.12.0",
         "eslint": "^7.32.0",
         "eslint-config-custom": "*",
+        "rollup": "^2.78.1",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-ts": "^3.0.2",
         "tsconfig": "*",
         "typescript": "^4.5.2",
         "vitest": "^0.21.1"
     },
     "dependencies": {
         "@cloudflare/opaque-ts": "^0.7.5",
-        "@teamjayj/opaque-core": "^0.1.0"
+        "@teamjayj/opaque-core": "^0.1"
     }
 }
