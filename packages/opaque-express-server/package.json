@@ -9,7 +9,7 @@
         "dist"
     ],
     "scripts": {
-        "build": "tsc",
+        "build": "rollup --config",
         "test": "vitest run",
         "test:watch": "vitest watch",
         "test:coverage": "vitest run --coverage",
@@ -22,6 +22,9 @@
         "c8": "^7.12.0",
         "eslint": "^7.32.0",
         "eslint-config-custom": "*",
+        "rollup": "^2.78.1",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-ts": "^3.0.2",
         "express": "^4.18.1",
         "supertest": "^6.2.4",
         "tsconfig": "*",
@@ -29,7 +32,7 @@
         "vitest": "^0.21.1"
     },
     "dependencies": {
-        "@teamjayj/opaque-cloudflare-driver": "^0.1.0",
-        "@teamjayj/opaque-core": "^0.1.0"
+        "@teamjayj/opaque-cloudflare-driver": "^0.1",
+        "@teamjayj/opaque-core": "^0.1"
     }
 }
