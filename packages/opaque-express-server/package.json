@@ -1,6 +1,6 @@
 {
     "name": "@teamjayj/opaque-express-server",
-    "version": "0.0.0",
+    "version": "0.1.0",
     "type": "module",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -29,7 +29,7 @@
         "vitest": "^0.21.1"
     },
     "dependencies": {
-        "@teamjayj/opaque-cloudflare-driver": "*",
-        "@teamjayj/opaque-core": "*"
+        "@teamjayj/opaque-cloudflare-driver": "^0.1.0",
+        "@teamjayj/opaque-core": "^0.1.0"
     }
 }
