@@ -10,7 +10,7 @@
     ],
     "scripts": {
         "prepublishOnly": "yarn build",
-        "build": "tsc",
+        "build": "rollup --config",
         "test": "vitest run",
         "test:watch": "vitest watch",
         "test:coverage": "vitest run --coverage",
@@ -21,6 +21,9 @@
         "c8": "^7.12.0",
         "eslint": "^7.32.0",
         "eslint-config-custom": "*",
+        "rollup": "^2.78.1",
+        "rollup-plugin-delete": "^2.0.0",
+        "rollup-plugin-ts": "^3.0.2",
         "tsconfig": "*",
         "typescript": "^4.5.2",
         "vitest": "^0.21.1"
