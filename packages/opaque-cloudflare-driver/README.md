@@ -1,5 +1,7 @@
 # @teamjayj/opaque-cloudflare-driver
 
+[![NPM](https://nodei.co/npm/@teamjayj/opaque-cloudflare-driver.png)](https://www.npmjs.com/package/@teamjayj/opaque-cloudflare-driver)
+
 An `opaque-starter` driver for the [`@cloudflare/opaque-ts`](https://github.com/cloudflare/opaque-ts/) implementation.
 
 ## Details
