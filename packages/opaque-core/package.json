@@ -9,6 +9,7 @@
         "dist"
     ],
     "scripts": {
+        "prepublishOnly": "yarn build",
         "build": "tsc",
         "test": "vitest run",
         "test:watch": "vitest watch",
@@ -26,5 +27,8 @@
     "dependencies": {
         "@types/uuid": "^8.3.4",
         "uuid": "^8.3.2"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }
