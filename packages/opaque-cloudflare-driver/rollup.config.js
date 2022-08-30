@@ -12,14 +12,6 @@ const config = [
         },
         plugins: [del({ targets: ['dist'] }), ts()],
     },
-    {
-        input: 'lib/credential-generator/index.ts',
-        output: {
-            dir: 'lib/credential-generator/dist',
-            format: 'es',
-        },
-        plugins: [del({ targets: ['lib/dist'] }), ts()],
-    },
 ];
 
 export default config;
