@@ -4,6 +4,10 @@ An `opaque-starter` driver for the [`@cloudflare/opaque-ts`](https://github.com/
 
 [![NPM](https://nodei.co/npm/@teamjayj/opaque-cloudflare-driver.png)](https://www.npmjs.com/package/@teamjayj/opaque-cloudflare-driver)
 
+## Warning
+
+This package is currently at an unstable release and only suited for experimentation. Use at your own risk.
+
 ## Details
 
 The `@cloudflare/opaque-ts` implementation adheres to the [`draft-irtf-cfrg-opaque-07`](https://datatracker.ietf.org/doc/html/draft-irtf-cfrg-opaque-07) specification.

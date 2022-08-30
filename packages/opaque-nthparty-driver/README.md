@@ -2,6 +2,10 @@
 
 An `opaque-starter` driver for a rewritten implementation of [`@nthparty/opaque`](https://github.com/nthparty/opaque) (version `0.3.0`) in TypeScript with updated types and dependencies.
 
+## Warning
+
+This package is currently at an unstable release and only suited for experimentation. Use at your own risk.
+
 ## Details
 
 This implementation references the [`draft-krawczyk-cfrg-opaque-06`](https://datatracker.ietf.org/doc/html/draft-krawczyk-cfrg-opaque-06) specification. In the JavaScript implementation, the following are observed:
