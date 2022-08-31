@@ -1,5 +1,7 @@
 # opaque-starter
 
+[![Node CI](https://github.com/teamjayj/opaque-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/teamjayj/opaque-starter/actions/workflows/ci.yml)
+
 It is a monorepository containing packages relevant for the implementation of the [OPAQUE asymmetric PAKE (aPAKE) protocol](https://eprint.iacr.org/2018/163.pdf) in JavaScript/TypeScript.
 
 This monorepo aims to create an abstraction layer on top of existing OPAQUE libraries, server frameworks, and front-end web frameworks/libraries.
