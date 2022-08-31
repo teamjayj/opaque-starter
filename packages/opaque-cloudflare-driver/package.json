@@ -5,6 +5,14 @@
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "license": "MIT",
+    "homepage": "https://github.com/teamjayj/opaque-starter#readme",
+    "keywords": [
+        "opaque"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/teamjayj/opaque-starter.git"
+    },
     "files": [
         "dist"
     ],
