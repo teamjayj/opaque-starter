@@ -9,8 +9,6 @@ import { createServer } from '.';
 describe('Registration protocol express server test', () => {
     let app: Application;
 
-    const userId = 'bob';
-
     const clientPrecomputations = {
         registerInit:
             '026a1e9dafcec1000f83e6be569fce49b2403bd2632f085148c0084faa000e3bde',
@@ -35,7 +33,9 @@ describe('Registration protocol express server test', () => {
 
         app.use(
             (err: Error, req: Request, res: Response, next: NextFunction) => {
-                res.status(500).send('error');
+                res.status(500).send({
+                    message: err.message,
+                });
             }
         );
     });
@@ -43,7 +43,7 @@ describe('Registration protocol express server test', () => {
     it('POST request successfully to registerInit', async () => {
         const response = await request(app)
             .post('/register-init')
-            .send({ data: clientPrecomputations.registerInit, userId });
+            .send({ data: clientPrecomputations.registerInit, userId: 'bob' });
 
         expect(response.statusCode).toEqual(200);
         expect(response.body).toHaveProperty('data');
@@ -57,10 +57,54 @@ describe('Registration protocol express server test', () => {
         expect(response.statusCode).toEqual(500);
     });
 
+    it('POST request to registerInit should verify already registered user', async () => {
+        await request(app).post('/register-init').send({
+            data: clientPrecomputations.registerInit,
+            userId: 'alex',
+        });
+
+        await request(app).post('/register-finish').send({
+            data: clientPrecomputations.registerFinish,
+            userId: 'alex',
+        });
+
+        const response = await request(app).post('/register-init').send({
+            data: clientPrecomputations.registerInit,
+            userId: 'alex',
+        });
+
+        expect(response.statusCode).toEqual(500);
+        expect(response.body).toEqual({
+            message: `User 'alex' is already registered`,
+        });
+    });
+
+    it('POST request to registerFinish should verify already registered user', async () => {
+        await request(app).post('/register-init').send({
+            data: clientPrecomputations.registerInit,
+            userId: 'alex',
+        });
+
+        await request(app).post('/register-finish').send({
+            data: clientPrecomputations.registerFinish,
+            userId: 'alex',
+        });
+
+        const response = await request(app).post('/register-finish').send({
+            data: clientPrecomputations.registerInit,
+            userId: 'alex',
+        });
+
+        expect(response.statusCode).toEqual(500);
+        expect(response.body).toEqual({
+            message: `User 'alex' is already registered`,
+        });
+    });
+
     it('POST request to registration finish endpoint', async () => {
         const response = await request(app).post('/register-finish').send({
             data: clientPrecomputations.registerFinish,
-            userId,
+            userId: 'bob',
         });
 
         expect(response.statusCode).toEqual(200);

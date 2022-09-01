@@ -14,9 +14,6 @@ import { createServer } from '.';
 describe('Authentication protocol express server test', () => {
     let app: Application;
 
-    const userId = 'bob';
-    const sessionId = 'sessionId';
-
     const clientPrecomputations = {
         authInit:
             '02627898a44a393892120e693bdfe68c7dbb3d0b7fdbddae1f63c66dadfde28dcd631986f3892001eecb8f62b9540e6721fb3c55127658759072d3fac5aef0b96703a8d2a50753bb5f3e33265e25c84f518144a4ee9d4695c09fdc67f65cc2e0c07d',
@@ -42,13 +39,13 @@ describe('Authentication protocol express server test', () => {
         const credentialStore = new InMemoryOpaqueCredentialStore();
 
         credentialStore.store(
-            userId,
+            'bob',
             hexStringToUint8Array(serverPrecomputations.credentialFile)
         );
 
         const sessionStore = new InMemoryOpaqueSessionStore();
         sessionStore.store(
-            sessionId,
+            'my-session-id',
             hexStringToUint8Array(serverPrecomputations.expectedAuthResult)
         );
 
@@ -67,8 +64,9 @@ describe('Authentication protocol express server test', () => {
 
         app.use(
             (err: Error, req: Request, res: Response, next: NextFunction) => {
-                console.log(err);
-                res.status(500).send('error');
+                res.status(500).send({
+                    message: err.message,
+                });
             }
         );
     });
@@ -76,17 +74,28 @@ describe('Authentication protocol express server test', () => {
     it('POST request successfully to authInit', async () => {
         const response = await request(app)
             .post('/login-init')
-            .send({ data: clientPrecomputations.authInit, userId });
+            .send({ data: clientPrecomputations.authInit, userId: 'bob' });
 
         expect(response.statusCode).toEqual(200);
         expect(response.body).toHaveProperty('data');
         expect(response.body).toHaveProperty('sessionId');
     });
 
+    it('POST request to authInit should verify if a user does not exist', async () => {
+        const response = await request(app)
+            .post('/login-init')
+            .send({ data: clientPrecomputations.authInit, userId: 'alex' });
+
+        expect(response.statusCode).toEqual(500);
+        expect(response.body).toEqual({
+            message: `Cannot find user 'alex'`,
+        });
+    });
+
     it('POST request successfully to authFinish', async () => {
         const response = await request(app).post('/login-finish').send({
             data: clientPrecomputations.authFinish,
-            sessionId,
+            sessionId: 'my-session-id',
         });
 
         expect(response.statusCode).toEqual(200);
@@ -94,5 +103,17 @@ describe('Authentication protocol express server test', () => {
         expect(response.body.sessionKey).toEqual(
             clientPrecomputations.clientSessionKey
         );
+    });
+
+    it('POST request to authFinish should verify if a session does not exist', async () => {
+        const response = await request(app).post('/login-finish').send({
+            data: clientPrecomputations.authFinish,
+            sessionId: 'not-my-session-id',
+        });
+
+        expect(response.statusCode).toEqual(500);
+        expect(response.body).toEqual({
+            message: `Cannot find session 'not-my-session-id'`,
+        });
     });
 });
