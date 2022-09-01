@@ -15,4 +15,13 @@ export interface OpaqueCredentialStore {
      * @returns credential file of client
      */
     get(credentialId: string): Promise<Uint8Array>;
+
+    /**
+     * Determines whether a credential file exists from an ID.
+     *
+     * @param credentialId - credential identifier
+     *
+     * @returns whether credential file exists
+     */
+    has(credentialId: string): Promise<boolean>;
 }

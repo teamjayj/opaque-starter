@@ -27,4 +27,8 @@ export class InMemoryOpaqueCredentialStore implements OpaqueCredentialStore {
 
         return value;
     }
+
+    public async has(credentialId: string): Promise<boolean> {
+        return this.cache.has(credentialId);
+    }
 }

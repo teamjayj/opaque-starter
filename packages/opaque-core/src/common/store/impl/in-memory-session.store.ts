@@ -28,4 +28,8 @@ export class InMemoryOpaqueSessionStore implements OpaqueSessionStore {
 
         return value;
     }
+
+    public async has(sessionId: string): Promise<boolean> {
+        return this.cache.has(sessionId);
+    }
 }

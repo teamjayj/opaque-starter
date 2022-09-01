@@ -23,4 +23,13 @@ export interface OpaqueSessionStore {
      * @returns expected auth data of session
      */
     get(sessionId: string): Promise<Uint8Array>;
+
+    /**
+     * Determines whether a session exists from an ID.
+     *
+     * @param sessionId - session identifier
+     *
+     * @returns whether session file exists
+     */
+    has(sessionId: string): Promise<boolean>;
 }
