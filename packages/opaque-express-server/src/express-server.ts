@@ -32,8 +32,15 @@ export class OpaqueExpressServer extends OpaqueServer {
                     this.validateData(data);
                     this.validateUserId(userId);
 
-                    const clientRequestData = hexStringToUint8Array(data);
                     const credentialId = credentialIdGenerator(userId);
+
+                    if (await credentialStore.has(credentialId)) {
+                        throw new Error(
+                            `User '${userId}' is already registered`
+                        );
+                    }
+
+                    const clientRequestData = hexStringToUint8Array(data);
 
                     const registrationResponse = await driver.registerInit(
                         clientRequestData,
@@ -58,8 +65,15 @@ export class OpaqueExpressServer extends OpaqueServer {
                     this.validateData(data);
                     this.validateUserId(userId);
 
-                    const registrationRecord = hexStringToUint8Array(data);
                     const credentialId = credentialIdGenerator(userId);
+
+                    if (await credentialStore.has(credentialId)) {
+                        throw new Error(
+                            `User '${userId}' is already registered`
+                        );
+                    }
+
+                    const registrationRecord = hexStringToUint8Array(data);
 
                     const credentialFile = await driver.registerFinish(
                         registrationRecord,
@@ -94,12 +108,21 @@ export class OpaqueExpressServer extends OpaqueServer {
                     this.validateData(data);
                     this.validateUserId(userId);
 
-                    const clientRequestData = hexStringToUint8Array(data);
                     const credentialId = credentialIdGenerator(userId);
+
+                    const hasCredential = await credentialStore.has(
+                        credentialId
+                    );
+
+                    if (!hasCredential) {
+                        throw new Error(`Cannot find user '${userId}'`);
+                    }
 
                     const credentialFile = await credentialStore.get(
                         credentialId
                     );
+
+                    const clientRequestData = hexStringToUint8Array(data);
 
                     const { serverResponse, expectedAuthResult } =
                         await driver.authInit(
@@ -130,11 +153,17 @@ export class OpaqueExpressServer extends OpaqueServer {
                     this.validateData(data);
                     this.validateSessionId(sessionId);
 
-                    const clientRequestData = hexStringToUint8Array(data);
+                    const hasSession = await sessionStore.has(sessionId);
+
+                    if (!hasSession) {
+                        throw new Error(`Cannot find session '${sessionId}'`);
+                    }
 
                     const expectedAuthResultData = await sessionStore.get(
                         sessionId
                     );
+
+                    const clientRequestData = hexStringToUint8Array(data);
 
                     const sessionKey = await driver.authFinish(
                         clientRequestData,
