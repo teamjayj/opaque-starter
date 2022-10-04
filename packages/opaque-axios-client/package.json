@@ -26,8 +26,8 @@
     },
     "devDependencies": {
         "@peculiar/webcrypto": "^1.4.0",
-        "@teamjayj/opaque-cloudflare-driver": "^0.2",
-        "@teamjayj/opaque-express-server": "^0.2",
+        "@teamjayj/opaque-cloudflare-driver": "^0.3",
+        "@teamjayj/opaque-express-server": "^0.3",
         "@types/express": "^4.17.13",
         "c8": "^7.12.0",
         "eslint": "^7.32.0",
