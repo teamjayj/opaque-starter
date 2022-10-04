@@ -1,6 +1,6 @@
 {
     "name": "@teamjayj/opaque-express-server",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "type": "module",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -42,7 +42,7 @@
         "vitest": "^0.21.1"
     },
     "dependencies": {
-        "@teamjayj/opaque-core": "^0.2"
+        "@teamjayj/opaque-core": "^0.3"
     },
     "publishConfig": {
         "access": "public"
