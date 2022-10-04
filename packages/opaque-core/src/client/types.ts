@@ -3,5 +3,9 @@ import { OpaqueRouteConfig } from '../common';
 
 export type OpaqueClientConfig = {
     driver: OpaqueClientDriver;
-    routes?: OpaqueRouteConfig;
+    server: {
+        id: string;
+        hostname: string;
+        routes?: OpaqueRouteConfig;
+    };
 };
