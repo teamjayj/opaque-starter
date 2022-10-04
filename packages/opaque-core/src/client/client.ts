@@ -5,9 +5,13 @@ import { OpaqueClientConfig } from './types';
 export class OpaqueClient {
     protected driver: OpaqueClientDriver;
     protected routes: OpaqueRouteConfig;
+    protected serverId: string;
+    protected serverHostname: string;
 
     constructor(config: OpaqueClientConfig) {
         this.driver = config.driver;
+        this.serverId = config.server.id;
+        this.serverHostname = config.server.hostname;
         this.routes = this.getRouteConfig(config);
     }
 
@@ -16,7 +20,7 @@ export class OpaqueClient {
     }
 
     private getRouteConfig(config: OpaqueClientConfig): OpaqueRouteConfig {
-        if (config.routes == null) {
+        if (config.server.routes == null) {
             return {
                 registerInitEndpoint: '/register-init',
                 registerFinishEndpoint: '/register-finish',
@@ -24,7 +28,7 @@ export class OpaqueClient {
                 authFinishEndpoint: '/login-finish',
             };
         } else {
-            return config.routes;
+            return config.server.routes;
         }
     }
 }
