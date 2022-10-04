@@ -278,6 +278,14 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.1.4.tgz#0c8b74c50f29ee44f423f7416829c0bf8bb5eb27"
   integrity sha512-LwzQKA4vzIct1zNZzBmRKI9QuNpLgTQMEjsQLf3BXuGYb3QPTP4Yjf6mkdX+X1mYttZ808QpOwAzZjv28kq7DA==
 
+"@teamjayj/opaque-cloudflare-driver@^0.2":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@teamjayj/opaque-cloudflare-driver/-/opaque-cloudflare-driver-0.2.0.tgz#c60c7b9a236e14cf8f7c7fb9b6b66dffa9a12ca7"
+  integrity sha512-Wbm7c+BzyrGJIu01krXIolpBoE4XYAFotr9+rpmvxYe9BTTpacPEHllSru0Ds6mIzmtkpFXrjLonUU5odybvQQ==
+  dependencies:
+    "@cloudflare/opaque-ts" "^0.7.5"
+    "@teamjayj/opaque-core" "^0.2"
+
 "@teamjayj/opaque-core@^0.2":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@teamjayj/opaque-core/-/opaque-core-0.2.0.tgz#002ab1fe0ad8244d86c78d382294d2eab54116a4"
