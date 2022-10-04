@@ -57,6 +57,55 @@ export class OpaqueAxiosClient extends OpaqueClient {
         return registerFinishResponse.data.success;
     }
 
+    public async login(
+        userId: string,
+        plaintextPassword: string
+    ): Promise<boolean> {
+        try {
+            const axios = this.axiosInstance;
+            const driver = this.driver;
+            const serverId = this.serverId;
+
+            const { authInitEndpoint, authFinishEndpoint } = this.routes;
+
+            const authInitRequestRaw = await driver.authInit(plaintextPassword);
+
+            const authInitResponseSer = await axios.post(
+                this.getWithHostNameUrl(authInitEndpoint),
+                {
+                    data: uint8ArrayToHexString(authInitRequestRaw),
+                    userId,
+                }
+            );
+
+            const { sessionId, data: authInitResponseData } =
+                authInitResponseSer.data;
+
+            const authInitResponseRaw =
+                hexStringToUint8Array(authInitResponseData);
+
+            const { sessionKey: clientSessionKeyRaw, clientRequest } =
+                await driver.authFinish(authInitResponseRaw, userId, serverId);
+
+            const authFinishResponseSer = await axios.post(
+                this.getWithHostNameUrl(authFinishEndpoint),
+                {
+                    data: uint8ArrayToHexString(clientRequest),
+                    sessionId,
+                }
+            );
+
+            const clientSessionKeySer =
+                uint8ArrayToHexString(clientSessionKeyRaw);
+
+            return (
+                authFinishResponseSer.data.sessionKey === clientSessionKeySer
+            );
+        } catch (error) {
+            throw error;
+        }
+    }
+
     private getWithHostNameUrl(route: string): string {
         return this.serverHostname.concat(route);
     }
