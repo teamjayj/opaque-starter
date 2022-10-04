@@ -1,12 +1,9 @@
 import { OpaqueServerDriver } from '.';
-import { OpaqueCredentialStore, OpaqueSessionStore } from '../common';
-
-export type OpaqueServerRouteConfig = {
-    registerInitEndpoint: string;
-    registerFinishEndpoint: string;
-    authInitEndpoint: string;
-    authFinishEndpoint: string;
-};
+import {
+    OpaqueCredentialStore,
+    OpaqueRouteConfig,
+    OpaqueSessionStore,
+} from '../common';
 
 export type OpaqueServerStoreConfig = {
     credentialStore: OpaqueCredentialStore;
@@ -21,6 +18,6 @@ export type OpaqueServerGeneratorConfig = {
 export type OpaqueServerConfig = {
     driver: OpaqueServerDriver;
     stores?: OpaqueServerStoreConfig;
-    routes?: OpaqueServerRouteConfig;
+    routes?: OpaqueRouteConfig;
     generators?: OpaqueServerGeneratorConfig;
 };

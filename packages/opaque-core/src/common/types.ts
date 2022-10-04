@@ -13,3 +13,10 @@ export enum OpaqueCipherSuite {
     P384_SHA384,
     P521_SHA521,
 }
+
+export type OpaqueRouteConfig = {
+    registerInitEndpoint: string;
+    registerFinishEndpoint: string;
+    authInitEndpoint: string;
+    authFinishEndpoint: string;
+};
