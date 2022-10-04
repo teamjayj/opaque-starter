@@ -1,11 +1,11 @@
 import {
     InMemoryOpaqueCredentialStore,
     InMemoryOpaqueSessionStore,
+    OpaqueRouteConfig,
 } from '../common';
 import { OpaqueServerDriver } from './server-driver';
 import {
     OpaqueServerStoreConfig,
-    OpaqueServerRouteConfig,
     OpaqueServerGeneratorConfig,
     OpaqueServerConfig,
 } from './types';
@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class OpaqueServer {
     protected driver: OpaqueServerDriver;
     protected stores: OpaqueServerStoreConfig;
-    protected routes: OpaqueServerRouteConfig;
+    protected routes: OpaqueRouteConfig;
     protected generators: OpaqueServerGeneratorConfig;
 
     constructor(config: OpaqueServerConfig) {
@@ -41,9 +41,7 @@ export class OpaqueServer {
         }
     }
 
-    private getRouteConfig(
-        config: OpaqueServerConfig
-    ): OpaqueServerRouteConfig {
+    private getRouteConfig(config: OpaqueServerConfig): OpaqueRouteConfig {
         if (config.routes == null) {
             return {
                 registerInitEndpoint: '/register-init',
