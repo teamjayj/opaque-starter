@@ -8,7 +8,7 @@ This monorepo aims to create an abstraction layer on top of existing OPAQUE libr
 
 ## Packages
 
-Each package has [TypeScript](https://www.typescriptlang.org/) support and targets ECMAScript 2015 (ES6) as its minimum version.
+Each package has [TypeScript](https://www.typescriptlang.org/) support and targets ECMAScript 2015 (ES6) as its minimum version. Rollup was used to build each package.
 
 ### Core
 
@@ -30,6 +30,14 @@ Each package has [TypeScript](https://www.typescriptlang.org/) support and targe
 | Package                           | Server Framework                    |
 | --------------------------------- | ----------------------------------- |
 | `@teamjayj/opaque-express-server` | [`express`](https://expressjs.com/) |
+
+### Clients
+
+`opaque-starter` has available implementations of OPAQUE authentication in popular JavaScript client frameworks.
+
+| Package                           | Server Framework                    |
+| --------------------------------- | ----------------------------------- |
+| `@teamjayj/opaque-axios-client` | [`axios`](https://axios-http.com/) |
 
 ### Utilities
 
